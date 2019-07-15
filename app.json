@@ -18,6 +18,12 @@
     "androidStatusBar": {
       "barStyle": "light-content",
       "backgroundColor": "#334393"
-    }
+    },
+    "name": "NativebaseKitchenSink",
+    "version": "2.5.0",
+    "platforms": [
+      "android",
+      "ios"
+    ]
   }
 }
