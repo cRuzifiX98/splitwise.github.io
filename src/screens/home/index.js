@@ -53,7 +53,7 @@ class Home extends Component {
               </TabHeading>
             }
           >
-            <HomeScreen />
+            <HomeScreen screenProps={this.props} />
           </Tab>
           <Tab
             heading={

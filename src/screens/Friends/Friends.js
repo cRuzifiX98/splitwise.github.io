@@ -20,8 +20,6 @@ import {
   CardItem,
   Right
 } from "native-base";
-// import NHCardTransparent from "../card/card-transparent";
-import Custom from "../button/custom";
 
 const data = {
   userId: 1,
@@ -155,7 +153,10 @@ export default function Friends(props) {
           <Card transparent key={friend.name}>
             <CardItem
               button
-              onPress={() => props.toggleTransaction(friend.Id)}
+              onPress={() =>
+                Alert.alert(
+                  "Want to view transactions? /nWe will be addding this feature soom!!"
+                )}
               key={friend.name}
               style={[styles.paddingBottom0]}
             >
@@ -214,10 +215,6 @@ export default function Friends(props) {
                     </Text>
                   </View>}
             </CardItem>
-            {props.id === friend.id &&
-              <CardItem>
-                <Text>Transaction</Text>
-              </CardItem>}
           </Card>
         );
       })}

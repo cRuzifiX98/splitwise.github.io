@@ -1,10 +1,9 @@
 {
+  "devToolsPort": 19003,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 4941,
-  "expoServerNgrokUrl": "https://zj-6xn.anonymous.splitwise-betageeks.exp.direct",
-  "packagerNgrokUrl": "https://packager.zj-6xn.anonymous.splitwise-betageeks.exp.direct",
-  "ngrokPid": 4994,
-  "devToolsPort": 19002,
-  "webpackServerPort": null
+  "packagerPid": 25603,
+  "expoServerNgrokUrl": "https://qh-fes.anonymous.splitwise-betageeks.exp.direct",
+  "packagerNgrokUrl": "https://packager.qh-fes.anonymous.splitwise-betageeks.exp.direct",
+  "ngrokPid": 25629
 }

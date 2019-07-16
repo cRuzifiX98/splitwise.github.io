@@ -13,22 +13,17 @@ import {
 } from "react-native";
 import TopCard from "./TopCard";
 import Friends from "./Friends";
+// import console = require("console");
 // import { MonoText } from "../components/StyledText";
 // import { H1, Container, , Icon } from "native-base";
-
 class HomeScreen extends Component {
   state = {
-    showFriendTransactions: false,
-    friendId: 0
+    addExpenses: false
   };
 
-  toggleTransaction = id => {
+  toggleAddExpenses = () => {
     this.setState(prevState => {
-      if (prevState.friendId !== 0) {
-        return { friendId: 0 };
-      } else {
-        return { friendId: id };
-      }
+      return { addExpenses: !prevState.addExpenses };
     });
   };
 
@@ -37,13 +32,11 @@ class HomeScreen extends Component {
       <React.Fragment>
         <ScrollView style={styles.container}>
           <TopCard />
-          <Friends
-            showTransactions={this.state.showFriendTransactions}
-            toggleTransaction={this.toggleTransaction}
-            Id={this.state.friendId}
-          />
+          <Friends />
         </ScrollView>
         <TouchableOpacity
+          onPress={() =>
+            this.props.screenProps.navigation.navigate("AddFriend")}
           style={[styles.backGroundOrange, styles.addExpensesBtn]}
         >
           <Text style={styles.plus}>+</Text>
