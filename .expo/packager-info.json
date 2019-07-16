@@ -1,7 +1,7 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19003,
-  "packagerPid": 16079,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": "https://5p-k9q.anonymous.splitwise-betageeks.exp.direct",
   "packagerNgrokUrl": "https://packager.5p-k9q.anonymous.splitwise-betageeks.exp.direct",
   "ngrokPid": 16106,
