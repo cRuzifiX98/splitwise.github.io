@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 // import { ImageBackground, View, StatusBar,StyleSheet } from "react-native";
 import {
-  Container, H3, Text, Header, TabHeading, Title,
+  Container,
+  H3,
+  Text,
+  Header,
+  TabHeading,
+  Title,
   Button,
   Icon,
   Left,
@@ -13,34 +18,62 @@ import {
 // import { Grid, Col } from "react-native-easy-grid";
 import styles from "./styles";
 import HomeScreen from "../Friends";
-// import GroupsPage from "../Groups";
+import Groups from "../Groups";
 
 class Home extends Component {
+  toggleFriendTransaction = () => {
+    console.log("toggling");
+    this.setState({ showFriendTransaction: !this.state.showFriendTransaction });
+  };
   render() {
     return (
       <Container>
         {/* <StatusBar barStyle="light-content" /> */}
         <Header hasTabs>
           <Left>
-            <Button transparent onPress={() => this.props.navigation.openDrawer()}>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.openDrawer()}
+            >
               <Icon name="menu" />
             </Button>
           </Left>
           <Body>
-            <Title>Welcome to SplitWise</Title>
+            <Title>Splitwise</Title>
           </Body>
           <Right />
         </Header>
 
         <Tabs>
-          <Tab heading={<TabHeading><Icon name="person" /><Text>Friends</Text></TabHeading>}>
+          <Tab
+            heading={
+              <TabHeading>
+                <Icon name="person" />
+                <Text>Friends</Text>
+              </TabHeading>
+            }
+          >
             <HomeScreen />
           </Tab>
-          <Tab heading={<TabHeading><Icon name="people" /><Text>Group</Text></TabHeading>}>
+          <Tab
+            heading={
+              <TabHeading>
+                <Icon name="people" />
+                <Text>Group</Text>
+              </TabHeading>
+            }
+          >
             {/* <GroupsPage /> */}
-            <HomeScreen />
+            <Groups />
           </Tab>
-          <Tab heading={<TabHeading><Icon name="paper-plane" /><Text>Notifications</Text></TabHeading>}>
+          <Tab
+            heading={
+              <TabHeading>
+                <Icon name="paper-plane" />
+                <Text>Notifications</Text>
+              </TabHeading>
+            }
+          >
             <H3 style={styles.text}>Hello world</H3>
           </Tab>
         </Tabs>
@@ -48,6 +81,5 @@ class Home extends Component {
     );
   }
 }
-
 
 export default Home;

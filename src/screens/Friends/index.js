@@ -1,5 +1,5 @@
 // import * as WebBrowser from "expo-web-browser";
-import React from "react";
+import React, { Component } from "react";
 import {
   Image,
   Platform,
@@ -16,19 +16,44 @@ import Friends from "./Friends";
 // import { MonoText } from "../components/StyledText";
 // import { H1, Container, , Icon } from "native-base";
 
-export default function HomeScreen() {
-  return (
-    <React.Fragment>
-      <ScrollView style={styles.container}>
-        <TopCard />
-        <Friends />
-      </ScrollView>
-      {/* <Button style={[styles.backGroundOrange, styles.addExpensesBtn]}>
-        <Text style={styles.plus}>+</Text>
-      </Button> */}
-    </React.Fragment>
-  );
+class HomeScreen extends Component {
+  state = {
+    showFriendTransactions: false,
+    friendId: 0
+  };
+
+  toggleTransaction = id => {
+    this.setState(prevState => {
+      if (prevState.friendId !== 0) {
+        return { friendId: 0 };
+      } else {
+        return { friendId: id };
+      }
+    });
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <ScrollView style={styles.container}>
+          <TopCard />
+          <Friends
+            showTransactions={this.state.showFriendTransactions}
+            toggleTransaction={this.toggleTransaction}
+            Id={this.state.friendId}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          style={[styles.backGroundOrange, styles.addExpensesBtn]}
+        >
+          <Text style={styles.plus}>+</Text>
+        </TouchableOpacity>
+      </React.Fragment>
+    );
+  }
 }
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   addExpensesBtn: {
@@ -53,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEEEEE"
   },
   primaryFont: {
-    fontSize: 14,
+    fontSize: 14
     // fontFamily: "encoded-sans-medium"
   },
   container: {

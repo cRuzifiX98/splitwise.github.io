@@ -1,7 +1,11 @@
 import React from "react";
 import { Root } from "native-base";
 // import { StackNavigator, DrawerNavigator } from "react-navigation";
-import { createDrawerNavigator, createStackNavigator, createAppContainer } from "react-navigation";
+import {
+  createDrawerNavigator,
+  createStackNavigator,
+  createAppContainer
+} from "react-navigation";
 
 import Header from "./screens/Header/";
 import Header1 from "./screens/Header/1";
@@ -143,9 +147,9 @@ const Drawer = createDrawerNavigator(
     Home: { screen: Home },
     Anatomy: { screen: Anatomy },
     Anatomy1: { screen: Anatomy },
-    Anatomy2: { screen: Anatomy }
-    // Header: { screen: Header },
-    // Footer: { screen: Footer },
+    Anatomy2: { screen: Anatomy },
+    Header: { screen: Header },
+    Footer: { screen: Footer }
     // NHBadge: { screen: NHBadge },
     // NHButton: { screen: NHButton },
     // NHCard: { screen: NHCard },
