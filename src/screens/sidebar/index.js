@@ -10,7 +10,6 @@ import {
   Left,
   Right,
   Badge,
-  Button
 } from "native-base";
 import styles from "./style";
 
@@ -31,13 +30,13 @@ const datas = [
   },
   {
     name: "Setting",
-    route: "Anatomy",
+    route: "Anatomy1",
     icon: "settings",
     bg: "#C5F442"
   },
   {
     name: "Logout",
-    route: "Anatomy",
+    route: "Anatomy2",
     icon: "disc",
     bg: "#C5F442"
   }
@@ -97,7 +96,6 @@ class SideBar extends Component {
                   </Right>}
               </ListItem>}
           />
-          {/* <Button dark><Text> Logout </Text></Button> */}
         </Content>
       </Container>
     );
