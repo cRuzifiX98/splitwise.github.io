@@ -69,7 +69,7 @@ class LoginScreen extends Component {
         }
     }
     render() {
-        const uri = "../../../assets/contacts/lanuchscreen-split.jpeg";
+        const uri = "https://miro.medium.com/max/1280/1*wQ7Sfh98orBJWrU9itR1hA.jpeg";
 
         return (
 
