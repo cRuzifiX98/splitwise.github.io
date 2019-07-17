@@ -155,7 +155,7 @@ export default function Friends(props) {
               button
               onPress={() =>
                 Alert.alert(
-                  "Want to view transactions? /nWe will be addding this feature soom!!"
+                  "Want to view transactions? We will be addding this feature soon!!"
                 )}
               key={friend.name}
               style={[styles.paddingBottom0]}
