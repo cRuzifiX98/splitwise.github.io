@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyAUMBz2G4fIsILkU2Px146qJRqj3HOpONk",
-    authDomain: "new-react-native.firebaseapp.com",
-    databaseURL: "https://new-react-native.firebaseio.com",
-    projectId: "new-react-native",
-    storageBucket: "",
-    messagingSenderId: "968874828576",
-    appId: "1:968874828576:web:d7196868d4e22021"
+  apiKey: "AIzaSyDdmHgkR8DOL6Sbz1IyrKEvebuIxp1dPec",
+  authDomain: "splitwise-500ba.firebaseapp.com",
+  databaseURL: "https://splitwise-500ba.firebaseio.com",
+  projectId: "splitwise-500ba",
+  storageBucket: "splitwise-500ba.appspot.com",
+  messagingSenderId: "800905166300",
+  appId: "1:800905166300:web:18699e6259fec957"
   };
