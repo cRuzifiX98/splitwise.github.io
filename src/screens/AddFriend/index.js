@@ -16,7 +16,8 @@ import {
   Item,
   Form,
   Card,
-  Label
+  Label,
+  Toast
 } from "native-base";
 import { StyleSheet, View, Alert, TouchableOpacity } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
@@ -70,12 +71,12 @@ class AddFriend extends Component {
     payer: "YOU",
     paidBy: userId, // need access to user id and friend id to set paidBy and paidTo fields
     paidTo: friendId,
-    splitShare: 0
+    splitShare: 0,
+    split: "EQUALLY"
   };
 
   getTimeStamp = async () => {
     const currentDate = await new Date();
-    // console.log(typeof currentDate);
     const timeArray = [
       currentDate.getHours(),
       currentDate.getMinutes(),
@@ -84,7 +85,6 @@ class AddFriend extends Component {
       currentDate.getMonth(),
       currentDate.getFullYear()
     ];
-    // const timeArray = await Promise.all(promiseArray);
     return `${timeArray[0]}:${timeArray[1]}:${timeArray[2]} ${timeArray[3]}-${timeArray[4] +
       1}-${timeArray[5]}`;
   };
@@ -98,10 +98,15 @@ class AddFriend extends Component {
         amount: this.state.amount,
         splitShare: this.state.splitShare,
         paidBy: this.state.paidBy,
-        paidTo: this.state.paidTo,
-        timeStamp: timeStamp
+        paidTo: this.state.paidTo
+        // timeStamp: timeStamp
       };
-      console.log(transactionData);
+      Toast.show({
+        text: "Expense saved!",
+        // buttonText: "Okay",
+        duration: 3000
+      });
+      this.props.navigation.navigate("Home");
     } else {
       Alert.alert("Invalid Input");
     }
@@ -116,9 +121,12 @@ class AddFriend extends Component {
   };
 
   splitAmount = text => {
-    const splitShare = parseInt(text, 10) / 2;
-    console.log(splitShare);
+    const splitShare = parseFloat(text, 10) / 2;
     this.setState({ amount: text, splitShare: splitShare });
+  };
+
+  split = text => {
+    this.setState({ split: text });
   };
 
   render() {
@@ -129,7 +137,7 @@ class AddFriend extends Component {
             <Left>
               <Button
                 transparent
-                onPress={() => this.props.navigation.actions.goBack()}
+                onPress={() => this.props.navigation.navigate("Drawer")}
               >
                 <Icon name="arrow-back" />
               </Button>
@@ -195,8 +203,15 @@ class AddFriend extends Component {
                 </Menu>
               </Button>
               <Text style={styles.disabledBtn}> Split </Text>
-              <Button small light disabled>
-                <Text>Equally</Text>
+              <Button
+                onPress={() => this.split("EQUALLY")}
+                small
+                light
+                disabled
+              >
+                <Text>
+                  {this.state.split}
+                </Text>
               </Button>
             </View>
           </Content>

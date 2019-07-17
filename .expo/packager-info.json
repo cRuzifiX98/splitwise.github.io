@@ -1,8 +1,9 @@
 {
-  "expoServerPort": 19003,
-  "packagerPort": 19004,
-  "packagerPid": 9905,
+  "expoServerPort": 19000,
+  "packagerPort": 19003,
+  "packagerPid": 10532,
   "expoServerNgrokUrl": "https://qh-fes.anonymous.splitwise-betageeks.exp.direct",
   "packagerNgrokUrl": "https://packager.qh-fes.anonymous.splitwise-betageeks.exp.direct",
-  "ngrokPid": 9933
+  "ngrokPid": 10556,
+  "devToolsPort": 19002
 }

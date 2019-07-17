@@ -18,7 +18,55 @@ import Friends from "./Friends";
 // import { H1, Container, , Icon } from "native-base";
 class HomeScreen extends Component {
   state = {
-    addExpenses: false
+    addExpenses: false,
+    data: {
+      userId: 1,
+      firstName: "Souma",
+      lastName: "Ghosh",
+      youOwe: 200,
+      youAreOwed: 100,
+      // groups: [
+      //   {
+      //     name: "Pub",
+      //     balance: 200,
+      //     members: [
+      //       {
+      //         name: "Vijay",
+      //         balance: 50
+      //       },
+      //       {
+      //         name: "Shanmuk",
+      //         balance: -80
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     name: "Holiday",
+      //     balance: -200,
+      //     members: [
+      //       {
+      //         name: "Dhruvil",
+      //         balance: -50
+      //       },
+      //       {
+      //         name: "Ram",
+      //         balance: 80
+      //       }
+      //     ]
+      //   }
+      // ],
+      friends: [
+        { name: "Hassaan", balance: 1024 },
+        { name: "Yatin", balance: -500.36 },
+        { name: "Vivek", balance: 0 },
+        { name: "Madhu", balance: 100.88 },
+        { name: "Rizwan", balance: -200.55 },
+        { Id: 6, name: "Shanmuk", balance: 300.5 },
+        { Id: 7, name: "Shubham", balance: 150 },
+        { Id: 8, name: "Deepak", balance: 1024 },
+        { Id: 9, name: "Vikash", balance: 2000000 }
+      ]
+    }
   };
 
   toggleAddExpenses = () => {
