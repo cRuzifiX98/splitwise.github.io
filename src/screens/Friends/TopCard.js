@@ -97,11 +97,11 @@ export default function TopCard() {
           </Text>
         </View>
       </CardItem>
-      <CardItem
+      {/* <CardItem
         style={[styles.justifyEnd, styles.grayBackGround, styles.paddingRight0]}
       >
         <Icon type="Ionicons" name="menu" style={styles.lightGray} />
-      </CardItem>
+      </CardItem> */}
     </Card>
   );
 }
@@ -139,11 +139,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEEEEE"
   },
   primaryFont: {
-    fontSize: 14,
+    fontSize: 14
     // fontFamily: "encoded-sans-medium"
   },
   secondaryFont: {
-    fontSize: 12,
+    fontSize: 12
     // fontFamily: "encoded-sans-regular"
   },
   topCardHeader: {

@@ -1,33 +1,84 @@
 import React from "react";
 import {
   StyleSheet,
+  Image,
   Text,
   View,
+  TouchableHighlight,
+  TouchableOpacity,
   Alert
 } from "react-native";
 import {
+  Container,
+  Header,
   Button,
+  H1,
+  H2,
   Thumbnail,
+  Icon,
   Card,
-  CardItem} from "native-base";
-// import console = require("console");
+  CardItem,
+  Right
+} from "native-base";
 
+const data = {
+  userId: 1,
+  firstName: "Souma",
+  lastName: "Ghosh",
+  youOwe: 200,
+  youAreOwed: 100,
+  //   groups: [
+  //     {
+  //       name: "Pub",
+  //       balance: 200,
+  //       members: [
+  //         {
+  //           name: "Vijay",
+  //           balance: 50
+  //         },
+  //         {
+  //           name: "Shanmuk",
+  //           balance: -80
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       name: "Holiday",
+  //       balance: -200,
+  //       members: [
+  //         {
+  //           name: "Dhruvil",
+  //           balance: -50
+  //         },
+  //         {
+  //           name: "Ram",
+  //           balance: 80
+  //         }
+  //       ]
+  //     }
+  //   ]
+  friends: [
+    { name: "Hassaan", balance: 1024 },
+    { name: "Yatin", balance: -500.36 },
+    { name: "Vivek", balance: 0 },
+    { name: "Madhu", balance: 100.88 },
+    { name: "Rizwan", balance: -200.55 },
+    { name: "Shanmuk", balance: 300.5 },
+    { name: "Shubham", balance: 150 },
+    { name: "Deepak", balance: 1024 },
+    { name: "Vikash", balance: 2000000 }
+  ]
+};
 
-
-
-export default function Friends(props) {
-  // const data = [...props.data];
+export default function Friends() {
   return (
     <React.Fragment>
-      {props.data.friends.map(friend => {
+      {data.friends.map(friend => {
         return (
           <Card transparent key={friend.name}>
             <CardItem
               button
-              onPress={() =>
-                Alert.alert(
-                  "Want to view transactions? We will be addding this feature soon!!"
-                )}
+              onPress={() => Alert.alert("navigating to transactions page")}
               key={friend.name}
               style={[styles.paddingBottom0]}
             >
@@ -42,20 +93,8 @@ export default function Friends(props) {
                   {friend.name}
                 </Text>
               </View>
-              {friend.balance === 0 ? <View style={styles.marginLeftAuto}>
-                    <Text
-                      style={[
-                        styles.textAlignRight,
-                        styles.gray,
-                        styles.smallFont
-                      ]}
-                    >
-                      Settled up
-                    </Text>
-
-                  </View>
-              : friend.balance < 0 ?
-              <View style={styles.marginLeftAuto}>
+              {friend.balance < 0
+                ? <View style={styles.marginLeftAuto}>
                     <Text
                       style={[
                         styles.textAlignRight,
@@ -97,19 +136,18 @@ export default function Friends(props) {
                       {friend.balance}
                     </Text>
                   </View>}
-
             </CardItem>
           </Card>
         );
       })}
       <Button
         onPress={() =>
-          props.screenProps.navigation.navigate("AddFriend")}
+          Alert.alert("Want to add friends? We will add this feature soon!!")}
         block
         light
         style={[styles.button, styles.grayBackGround]}
       >
-        <Text style={styles.primaryFont} >+ ADD MORE FRIENDS</Text>
+        <Text style={styles.primaryFont}>+ ADD MORE FRIENDS</Text>
       </Button>
     </React.Fragment>
   );
@@ -149,12 +187,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEEEEE"
   },
   primaryFont: {
-    fontSize: 14
-    // fontFamily: "encoded-sans-regular"
+    fontSize: 14,
+    fontFamily: "encoded-sans-regular"
   },
   secondaryFont: {
-    fontSize: 12
-    // fontFamily: "encoded-sans-regular"
+    fontSize: 12,
+    fontFamily: "encoded-sans-regular"
   },
   topCardHeader: {
     marginBottom: 4
@@ -208,12 +246,12 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   mediumFont: {
-    fontSize: 15
-    // fontFamily: "encoded-sans-regular"
+    fontSize: 15,
+    fontFamily: "encoded-sans-regular"
   },
   smallFont: {
-    fontSize: 13
-    // fontFamily: "encoded-sans-regular"
+    fontSize: 13,
+    fontFamily: "encoded-sans-regular"
   },
   textAlignRight: {
     textAlign: "right"

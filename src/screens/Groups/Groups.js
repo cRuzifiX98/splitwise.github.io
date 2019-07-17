@@ -1,7 +1,6 @@
 // import * as WebBrowser from "expo-web-browser";
 import React from "react";
 import { StyleSheet, Image, Text, View } from "react-native";
-import Touchable from "react-native-platform-touchable";
 import {
   Container,
   Header,
@@ -134,45 +133,47 @@ export default function Groups() {
                 }}
               />
               <View key={group.name} style={styles.marginLeft}>
-                <Text style={styles.mediumFont}>{group.name}</Text>
+                <Text style={styles.mediumFont}>
+                  {group.name}
+                </Text>
               </View>
-              {group.balance < 0 ? (
-                <View style={styles.marginLeftAuto}>
-                  <Text
-                    style={[
-                      styles.textAlignRight,
-                      styles.primary,
-                      styles.smallFont
-                    ]}
-                  >
-                    you are owed
-                  </Text>
-                  <Text
-                    style={[
-                      styles.bigFont,
-                      styles.textAlignRight,
-                      styles.primary
-                    ]}
-                  >
-                    {"\u20B9"}
-                    {group.balance - 2 * group.balance}
-                  </Text>
-                </View>
-              ) : (
-                <View style={styles.marginLeftAuto}>
-                  <Text style={[styles.orange, styles.smallFont]}>you owe</Text>
-                  <Text
-                    style={[
-                      styles.bigFont,
-                      styles.textAlignRight,
-                      styles.orange
-                    ]}
-                  >
-                    {"\u20B9"}
-                    {group.balance}
-                  </Text>
-                </View>
-              )}
+              {group.balance < 0
+                ? <View style={styles.marginLeftAuto}>
+                    <Text
+                      style={[
+                        styles.textAlignRight,
+                        styles.primary,
+                        styles.smallFont
+                      ]}
+                    >
+                      you are owed
+                    </Text>
+                    <Text
+                      style={[
+                        styles.bigFont,
+                        styles.textAlignRight,
+                        styles.primary
+                      ]}
+                    >
+                      {"\u20B9"}
+                      {group.balance - 2 * group.balance}
+                    </Text>
+                  </View>
+                : <View style={styles.marginLeftAuto}>
+                    <Text style={[styles.orange, styles.smallFont]}>
+                      you owe
+                    </Text>
+                    <Text
+                      style={[
+                        styles.bigFont,
+                        styles.textAlignRight,
+                        styles.orange
+                      ]}
+                    >
+                      {"\u20B9"}
+                      {group.balance}
+                    </Text>
+                  </View>}
             </CardItem>
             <CardItem
               key={"balanceHighlight"}
@@ -184,27 +185,25 @@ export default function Groups() {
               ]}
             >
               {group.members.map(member => {
-                return member.balance < 0 ? (
-                  <View key={member.name} style={styles.rowFlex}>
-                    <Text style={[styles.smallFont, styles.gray]}>
-                      {member.name} owes you {""}
-                    </Text>
-                    <Text style={styles.primary}>
-                      {"\u20B9"}
-                      {member.balance - 2 * member.balance}
-                    </Text>
-                  </View>
-                ) : (
-                  <View key={member.name} style={styles.rowFlex}>
-                    <Text style={[styles.smallFont, styles.gray]}>
-                      You owe {member.name} {""}
-                    </Text>
-                    <Text style={styles.orange}>
-                      {"\u20B9"}
-                      {member.balance}
-                    </Text>
-                  </View>
-                );
+                return member.balance < 0
+                  ? <View key={member.name} style={styles.rowFlex}>
+                      <Text style={[styles.smallFont, styles.gray]}>
+                        {member.name} owes you {""}
+                      </Text>
+                      <Text style={styles.primary}>
+                        {"\u20B9"}
+                        {member.balance - 2 * member.balance}
+                      </Text>
+                    </View>
+                  : <View key={member.name} style={styles.rowFlex}>
+                      <Text style={[styles.smallFont, styles.gray]}>
+                        You owe {member.name} {""}
+                      </Text>
+                      <Text style={styles.orange}>
+                        {"\u20B9"}
+                        {member.balance}
+                      </Text>
+                    </View>;
               })}
             </CardItem>
           </Card>
@@ -251,11 +250,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEEEEE"
   },
   primaryFont: {
-    fontSize: 14,
+    fontSize: 14
     // fontFamily: "encoded-sans-medium"
   },
   secondaryFont: {
-    fontSize: 12,
+    fontSize: 12
     // fontFamily: "encoded-sans-regular"
   },
   primaryFontBold: {},
@@ -308,15 +307,15 @@ const styles = StyleSheet.create({
     color: "#5AC5A7"
   },
   bigFont: {
-    fontSize: 20,
+    fontSize: 20
     // fontFamily: "encoded-sans-regular"
   },
   mediumFont: {
-    fontSize: 17,
+    fontSize: 17
     // fontFamily: "encoded-sans-regular"
   },
   smallFont: {
-    fontSize: 13,
+    fontSize: 13
     // fontFamily: "encoded-sans-regular"
   },
   textAlignRight: {

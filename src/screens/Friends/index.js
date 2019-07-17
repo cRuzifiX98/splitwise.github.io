@@ -1,34 +1,54 @@
-// import * as WebBrowser from "expo-web-browser";
-import React from "react";
+
+import React, { Component } from "react";
 import {
-  Image,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
-  Button,
-  TouchableOpacity,
-  View,
-  Alert
-} from "react-native";
+  TouchableOpacity} from "react-native";
 import TopCard from "./TopCard";
 import Friends from "./Friends";
-// import { MonoText } from "../components/StyledText";
-// import { H1, Container, , Icon } from "native-base";
+class HomeScreen extends Component {
+  state = {
+    addExpenses: false,
+    data: {
+      userId: 1,
+      firstName: "Souma",
+      lastName: "Ghosh",
+      youOwe: 200,
+      youAreOwed: 100,
+      friends: [
+        { name: "Hassaan", balance: 1024 },
+        { name: "Yatin", balance: -500.36 },
+      ]
+    }
+  };
 
-export default function HomeScreen() {
-  return (
-    <React.Fragment>
-      <ScrollView style={styles.container}>
-        <TopCard />
-        <Friends />
-      </ScrollView>
-      {/* <Button style={[styles.backGroundOrange, styles.addExpensesBtn]}>
-        <Text style={styles.plus}>+</Text>
-      </Button> */}
-    </React.Fragment>
-  );
+  toggleAddExpenses = () => {
+    this.setState(prevState => {
+      return { addExpenses: !prevState.addExpenses };
+    });
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <ScrollView style={styles.container}>
+          <TopCard />
+          <Friends data={this.props.data} screenProps={this.props.screenProps}/>
+        </ScrollView>
+        <TouchableOpacity
+          onPress={() =>
+            this.props.screenProps.navigation.navigate("AddExpense")}
+          style={[styles.backGroundOrange, styles.addExpensesBtn]}
+        >
+          <Text style={styles.plus}>+</Text>
+        </TouchableOpacity>
+      </React.Fragment>
+    );
+  }
 }
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   addExpensesBtn: {
@@ -53,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEEEEE"
   },
   primaryFont: {
-    fontSize: 14,
+    fontSize: 14
     // fontFamily: "encoded-sans-medium"
   },
   container: {
