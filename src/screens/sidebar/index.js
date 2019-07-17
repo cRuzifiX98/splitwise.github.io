@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Image } from "react-native";
+import firebase from "firebase";  
 import {
   Content,
   Text,
@@ -32,12 +33,6 @@ const datas = [
     name: "Setting",
     route: "Anatomy1",
     icon: "settings",
-    bg: "#C5F442"
-  },
-  {
-    name: "Logout",
-    route: "Anatomy2",
-    icon: "disc",
     bg: "#C5F442"
   }
 ];
@@ -95,7 +90,24 @@ class SideBar extends Component {
                     </Badge>
                   </Right>}
               </ListItem>}
+              
           />
+          <ListItem
+                button
+                noBorder
+                onPress={() => firebase.auth().signOut()}
+              >
+                <Left>
+                  <Icon
+                    active
+                    name="disc"
+                    style={{ color: "#777", fontSize: 26, width: 30 }}
+                  />
+                  <Text style={styles.text}>
+                    Logout
+                  </Text>
+                </Left>
+              </ListItem>
         </Content>
       </Container>
     );
