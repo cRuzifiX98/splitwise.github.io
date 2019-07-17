@@ -9,6 +9,7 @@ import LoadingScreen from "./screens/Login";
 import LoginScreen from "./screens/LoginScreen";
 import {firebaseConfig} from "./screens/firebase";
 firebase.initializeApp(firebaseConfig);
+
 const Drawer = createDrawerNavigator(
   {
     Home: { screen: Home },
