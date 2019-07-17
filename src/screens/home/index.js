@@ -55,27 +55,27 @@ class Home extends Component {
           >
             <HomeScreen screenProps={this.props} />
           </Tab>
-          <Tab
+          {/* <Tab
             heading={
               <TabHeading>
                 <Icon name="people" />
                 <Text>Group</Text>
               </TabHeading>
             }
-          >
-            {/* <GroupsPage /> */}
-            <Groups />
-          </Tab>
-          <Tab
+          > */}
+          {/* <GroupsPage /> */}
+          {/* <Groups />
+          </Tab> */}
+          {/* <Tab
             heading={
               <TabHeading>
                 <Icon name="paper-plane" />
                 <Text>Notifications</Text>
               </TabHeading>
             }
-          >
-            <H3 style={styles.text}>Hello world</H3>
-          </Tab>
+          > */}
+          {/* <H3 style={styles.text}>Hello world</H3>
+          </Tab> */}
         </Tabs>
       </Container>
     );

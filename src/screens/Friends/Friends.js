@@ -27,42 +27,42 @@ const data = {
   lastName: "Ghosh",
   youOwe: 200,
   youAreOwed: 100,
-  groups: [
-    {
-      name: "Pub",
-      balance: 200,
-      members: [
-        {
-          name: "Vijay",
-          balance: 50
-        },
-        {
-          name: "Shanmuk",
-          balance: -80
-        }
-      ]
-    },
-    {
-      name: "Holiday",
-      balance: -200,
-      members: [
-        {
-          name: "Dhruvil",
-          balance: -50
-        },
-        {
-          name: "Ram",
-          balance: 80
-        }
-      ]
-    }
-  ],
+  // groups: [
+  //   {
+  //     name: "Pub",
+  //     balance: 200,
+  //     members: [
+  //       {
+  //         name: "Vijay",
+  //         balance: 50
+  //       },
+  //       {
+  //         name: "Shanmuk",
+  //         balance: -80
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     name: "Holiday",
+  //     balance: -200,
+  //     members: [
+  //       {
+  //         name: "Dhruvil",
+  //         balance: -50
+  //       },
+  //       {
+  //         name: "Ram",
+  //         balance: 80
+  //       }
+  //     ]
+  //   }
+  // ],
   friends: [
-    { Id: 1, name: "Hassaan", balance: 1024 },
-    { Id: 2, name: "Yatin", balance: -500.36 },
-    { Id: 3, name: "Vivek", balance: 0 },
-    { Id: 4, name: "Madhu", balance: 100.88 },
-    { Id: 5, name: "Rizwan", balance: -200.55 },
+    { name: "Hassaan", balance: 1024 },
+    { name: "Yatin", balance: -500.36 },
+    { name: "Vivek", balance: 0 },
+    { name: "Madhu", balance: 100.88 },
+    { name: "Rizwan", balance: -200.55 },
     { Id: 6, name: "Shanmuk", balance: 300.5 },
     { Id: 7, name: "Shubham", balance: 150 },
     { Id: 8, name: "Deepak", balance: 1024 },
@@ -70,80 +70,11 @@ const data = {
   ]
 };
 
-const users = {
-  id: 1,
-  name: "Souma Ghosh",
-  email: "dsfaadf",
-  balance: 200, // positive or negative
-  imageUrl: ""
+const updateExpenses = () => {
+  data.friends.reduce((youAreOwed, friend) => {
+    if (friend.balance < 0) youAreOwed += friend.balance;
+  }, 0);
 };
-
-const friends = {
-  id: 2
-};
-
-const transactions = [
-  {
-    id: 1,
-    groupId: 0,
-    title: "Shopping",
-    paidBy: 4,
-    paidTo: 1,
-    amount: 200,
-    share: 50,
-    timeStamp: ""
-  },
-  {
-    id: 2,
-    groupId: 0,
-    title: "Shopping",
-    paidBy: 3,
-    paidTo: 1,
-    amount: 200,
-    share: 50,
-    timeStamp: ""
-  },
-  {
-    id: 3,
-    groupId: 0,
-    title: "Shopping",
-    paidBy: 2,
-    paidTo: 1,
-    amount: 200,
-    share: 50,
-    timeStamp: ""
-  },
-  {
-    id: 4,
-    groupId: 0,
-    title: "Shopping",
-    paidBy: 5,
-    paidTo: 1,
-    amount: 200,
-    share: 50,
-    timeStamp: ""
-  },
-  {
-    id: 5,
-    groupId: 0,
-    title: "Shopping",
-    paidBy: 7,
-    paidTo: 1,
-    amount: 200,
-    share: 50,
-    timeStamp: ""
-  },
-  {
-    id: 6,
-    groupId: 0,
-    title: "Shopping",
-    paidBy: 6,
-    paidTo: 1,
-    amount: 200,
-    share: 50,
-    timeStamp: ""
-  }
-];
 
 export default function Friends(props) {
   return (
