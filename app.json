@@ -5,7 +5,7 @@
     "slug": "splitwise-betageeks",
     "loading": {
       "hideExponentText": true,
-      "backgroundImage": "./assets/splashscreen.png"
+      "backgroundImage": "./assets/contacts/lanuchscreen-split.jpeg"
     },
     "orientation": "portrait",
     "primaryColor": "#cccccc",
