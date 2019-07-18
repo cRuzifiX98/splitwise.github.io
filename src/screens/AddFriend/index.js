@@ -7,8 +7,6 @@ import {
   Text,
   Button,
   Icon,
-  Footer,
-  FooterTab,
   Left,
   Right,
   Body,
@@ -16,19 +14,10 @@ import {
   Item,
   Form,
   Card,
-  Label,
   Toast
 } from "native-base";
-import { StyleSheet, View, Alert, TouchableOpacity } from "react-native";
+import { StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger
-} from "react-native-popup-menu";
-
-// import styles from "./styles";
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff"
@@ -60,74 +49,74 @@ const styles = StyleSheet.create({
     width: 100
   }
 });
+import firebase from "firebase";
+import "firebase/firestore";
 
-const userId = 1;
-const friendId = 4;
 class AddFriend extends Component {
   state = {
-    email: "",
-    title: "",
-    amount: "",
-    payer: "YOU",
-    paidBy: userId, // need access to user id and friend id to set paidBy and paidTo fields
-    paidTo: friendId,
-    splitShare: 0,
-    split: "EQUALLY"
+    email: ""
   };
-
-  getTimeStamp = async () => {
-    const currentDate = await new Date();
-    const timeArray = [
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds(),
-      currentDate.getDate(),
-      currentDate.getMonth(),
-      currentDate.getFullYear()
-    ];
-    return `${timeArray[0]}:${timeArray[1]}:${timeArray[2]} ${timeArray[3]}-${timeArray[4] +
-      1}-${timeArray[5]}`;
+  addFriend = async (email) => {
+    try {
+    const signedInUser = firebase.auth().currentUser.uid;
+    const db = firebase.firestore().collection("users");
+    let currEmail;
+    let currName;
+    db.doc(signedInUser).onSnapshot(item => {
+      currEmail = item.data().Email;
+      currName = item.data().Name;
+    });
+    const temp = await db.get();
+    let friendName;
+    let friendId;
+    temp.docs.forEach(item => {
+      if (item.data().Email === email) {
+        friendName = item.data().Name;
+        friendId = item.id;
+      }
+      else {
+        friendName = email;
+        friendId = email;
+        firebase.firestore().collection("/users").doc(email).set({
+          Email: email,
+          Name: email,
+          registration_status:false,
+          Total_Balance: 0
+      });
+      }
+    });
+    db.doc(friendId).collection("Friends").doc(signedInUser).set({
+      Name: currName,
+      Balance: 0
+    });
+    db.doc(signedInUser).collection("Friends").doc(friendId).set({
+      Name: friendName,
+      Balance: 0
+    });
+  }
+  catch (error){
+    console.log(error);
+  }
   };
-
   sendData = async () => {
-    if (this.state.email.includes("@") && this.state.amount) {
-      const timeStamp = await this.getTimeStamp();
-      this.setState;
-      const transactionData = {
-        title: this.state.title,
-        amount: this.state.amount,
-        splitShare: this.state.splitShare,
-        paidBy: this.state.paidBy,
-        paidTo: this.state.paidTo
-        // timeStamp: timeStamp
-      };
+    if (this.state.email.includes("@")) {
+      let insertFriend = await this.addFriend(this.state.email);
+      console.log(insertFriend);
       Toast.show({
-        text: "Expense saved!",
+        text: "Friend Added!",
         // buttonText: "Okay",
         duration: 3000
       });
-      this.props.navigation.navigate("Home");
+      const { navigation } = this.props;
+      console.log("going back",this.props)
+      
+      navigation.goBack();
+      navigation.state.params.update();
     } else {
       Alert.alert("Invalid Input");
     }
   };
 
-  friendPays = () => {
-    this.setState({ payer: "FRIEND", paidBy: friendId, paidTo: userId });
-  };
-
-  youPay = () => {
-    this.setState({ payer: "YOU", paidBy: userId, paidTo: friendId });
-  };
-
-  splitAmount = text => {
-    const splitShare = parseFloat(text, 10) / 2;
-    this.setState({ amount: text, splitShare: splitShare });
-  };
-
-  split = text => {
-    this.setState({ split: text });
-  };
 
   render() {
     return (
@@ -143,11 +132,11 @@ class AddFriend extends Component {
               </Button>
             </Left>
             <Body>
-              <Title>Add expense</Title>
+              <Title>Add Friend</Title>
             </Body>
             <Right>
               <TouchableOpacity onPress={this.sendData}>
-                <Text style={styles.save}>SAVE</Text>
+                <Text style={styles.save}>Add</Text>
               </TouchableOpacity>
             </Right>
           </Header>
@@ -156,7 +145,7 @@ class AddFriend extends Component {
             <Card>
               <Form searchBar>
                 <Item last>
-                  <Text>With you and:</Text>
+                  <Text>Your Friend Email </Text>
                   <Input
                     id="email"
                     placeholder="Enter email"
@@ -166,54 +155,6 @@ class AddFriend extends Component {
                 </Item>
               </Form>
             </Card>
-            <Form>
-              <Item underline>
-                <Input
-                  id="title"
-                  placeholder="Enter a description"
-                  value={this.state.title}
-                  onChangeText={text => this.setState({ title: text })}
-                />
-              </Item>
-              <Item inlineLabel>
-                <Label style={styles.currency}>
-                  {"\u20B9"}
-                </Label>
-                <Input
-                  id="amount"
-                  placeholder="0.00"
-                  value={this.state.amount}
-                  onChangeText={text => this.splitAmount(text)}
-                />
-              </Item>
-            </Form>
-            <View style={styles.selector}>
-              <Text>Paid by </Text>
-              <Button small light style={styles.selectorBtn}>
-                <Menu>
-                  <MenuTrigger text={this.state.payer} />
-                  <MenuOptions style={styles.menu}>
-                    <MenuOption style={styles.menu} onSelect={this.youPay}>
-                      <Text> YOU </Text>
-                    </MenuOption>
-                    <MenuOption onSelect={this.friendPays}>
-                      <Text> FRIEND </Text>
-                    </MenuOption>
-                  </MenuOptions>
-                </Menu>
-              </Button>
-              <Text style={styles.disabledBtn}> Split </Text>
-              <Button
-                onPress={() => this.split("EQUALLY")}
-                small
-                light
-                disabled
-              >
-                <Text>
-                  {this.state.split}
-                </Text>
-              </Button>
-            </View>
           </Content>
         </Container>
       </MenuProvider>

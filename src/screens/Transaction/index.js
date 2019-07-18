@@ -16,7 +16,7 @@ import {
 
 import styles from "./styles";
 
-class Anatomy extends Component {
+class Transaction extends Component {
   render() {
     return (
       <Container style={styles.container}>
@@ -24,19 +24,19 @@ class Anatomy extends Component {
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.openDrawer()}
+              onPress={() => this.props.navigation.goBack()}
             >
-              <Icon name="arrow-back  " />
+              <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>Header</Title>
+            <Title> ALL trasanctions</Title>
           </Body>
           <Right />
         </Header>
 
         <Content padder>
-          <Text>Content goes here (internal)</Text>
+          <Text>{JSON.stringify(this.props.navigation.state.params.data)}</Text>
         </Content>
 
         <Footer>
@@ -51,4 +51,4 @@ class Anatomy extends Component {
   }
 }
 
-export default Anatomy;
+export default Transaction;

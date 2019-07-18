@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Button, ImageBackground } from "react-native";
+import { StyleSheet, View, Button, ImageBackground } from "react-native";
 import firebase from "firebase";
 import * as Expo from "expo";
 import "firebase/firestore";
@@ -35,11 +35,26 @@ class LoginScreen extends Component {
                 );
                 // Sign in with credential from the Google user.
                 firebase.auth().signInWithCredential(credential)
-                    .then(result => {
+                    .then(async (result) => {
                         if (result.additionalUserInfo.isNewUser) {
+                            let temp = await firebase.firestore().collection("/users").get();
+                            temp.docs.forEach(item=>{
+                                if (item.id === result.user.email)
+                                {
+                                    let userData=item.data();
+                                    firebase.firestore().collection("/users").doc(result.user.email).delete();
+                                    firebase.firestore().collection("/users").doc(result.user.uid).set(userData);
+                                    firebase.firestore().collection("/users").doc(result.user.uid).update({
+                                    Name:result.additionalUserInfo.profile.given_name,
+                                    registration_status:true
+                                    });
+                                }
+                            });
+
                             firebase.firestore().collection("/users").doc(result.user.uid).set({
                                 Email: result.user.email,
                                 Name: result.additionalUserInfo.profile.given_name,
+                                registration_status:true,
                                 Total_Balance: 0
                             });
                         }
