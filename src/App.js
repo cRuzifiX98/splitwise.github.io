@@ -14,7 +14,7 @@ import LoginScreen from "./screens/LoginScreen";
 import { firebaseConfig } from "./screens/firebase";
 import AddExpense from "./screens/AddExpense";
 import AddFriend from "./screens/AddFriend";
-
+import Transaction from "./screens/Transaction";
 firebase.initializeApp(firebaseConfig);
 
 const Drawer = createDrawerNavigator(
@@ -38,7 +38,8 @@ const AppNavigator = createStackNavigator(
     LoginScreen: { screen: LoginScreen },
     Drawer: { screen: Drawer },
     AddExpense: { screen: AddExpense },
-    AddFriend:{screen:AddFriend}
+    AddFriend:{screen:AddFriend},
+    Transaction:{screen:Transaction}
   },
   {
     initialRouteName: "Login",

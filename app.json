@@ -23,7 +23,8 @@
     "version": "2.5.0",
     "platforms": [
       "android",
-      "ios"
+      "ios",
+      "web"
     ]
   }
 }

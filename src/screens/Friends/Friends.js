@@ -11,12 +11,20 @@ import {
   Card,
   CardItem} from "native-base";
 // import console = require("console");
+import firebase from "firebase";
+import "firebase/firestore";
 
-
-
+const getAllTransactionDetails = async (friendId) => {
+  const db = firebase.firestore().collection("users");
+  const signedInUser = firebase.auth().currentUser.uid;
+  const temp = await db.doc(signedInUser).collection("Transaction").docs(friendId).get();
+  const result = temp.docs.map(item => item.data());
+  return result;
+ };
 
 export default function Friends(props) {
   // const data = [...props.data];
+  
   return (
     <React.Fragment>
       {props.data.friends.map(friend => {
@@ -24,10 +32,8 @@ export default function Friends(props) {
           <Card transparent key={friend.name}>
             <CardItem
               button
-              onPress={() =>
-                Alert.alert(
-                  "Want to view transactions? We will be addding this feature soon!!"
-                )}
+              onPress={() =>props.screenProps.navigation.navigate("Transaction",{ data: getAllTransactionDetails(friend.email) })
+                }
               key={friend.name}
               style={[styles.paddingBottom0]}
             >
@@ -104,7 +110,7 @@ export default function Friends(props) {
       })}
       <Button
         onPress={() =>
-          props.screenProps.navigation.navigate("AddFriend")}
+          props.screenProps.navigation.navigate("AddFriend",{ update: props.update })}
         block
         light
         style={[styles.button, styles.grayBackGround]}

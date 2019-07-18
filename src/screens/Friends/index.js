@@ -34,7 +34,7 @@ class HomeScreen extends Component {
       <React.Fragment>
         <ScrollView style={styles.container}>
           <TopCard />
-          <Friends data={this.props.data} screenProps={this.props.screenProps}/>
+          <Friends update={this.props.update} data={this.props.data} screenProps={this.props.screenProps}/>
         </ScrollView>
         <TouchableOpacity
           onPress={() =>

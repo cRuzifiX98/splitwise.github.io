@@ -51,16 +51,13 @@ const styles = StyleSheet.create({
 });
 import firebase from "firebase";
 import "firebase/firestore";
-// import console = require("console");
-
-
-
 
 class AddFriend extends Component {
   state = {
     email: ""
   };
   addFriend = async (email) => {
+    try {
     const signedInUser = firebase.auth().currentUser.uid;
     const db = firebase.firestore().collection("users");
     let currEmail;
@@ -77,6 +74,16 @@ class AddFriend extends Component {
         friendName = item.data().Name;
         friendId = item.id;
       }
+      else {
+        friendName = email;
+        friendId = email;
+        firebase.firestore().collection("/users").doc(email).set({
+          Email: email,
+          Name: email,
+          registration_status:false,
+          Total_Balance: 0
+      });
+      }
     });
     db.doc(friendId).collection("Friends").doc(signedInUser).set({
       Name: currName,
@@ -86,6 +93,10 @@ class AddFriend extends Component {
       Name: friendName,
       Balance: 0
     });
+  }
+  catch (error){
+    console.log(error);
+  }
   };
   sendData = async () => {
     if (this.state.email.includes("@")) {
@@ -96,7 +107,11 @@ class AddFriend extends Component {
         // buttonText: "Okay",
         duration: 3000
       });
-      this.props.navigation.navigate("Home");
+      const { navigation } = this.props;
+      console.log("going back",this.props)
+      
+      navigation.goBack();
+      navigation.state.params.update();
     } else {
       Alert.alert("Invalid Input");
     }

@@ -22,7 +22,11 @@ class Home extends Component {
     addExpenses: false,
     currData: {}
   }
-  async componentDidMount(){
+ componentDidMount(){
+    this.updateState();
+
+  }
+  updateState = async ()=>{
     const signedInUser = firebase.auth().currentUser.uid;
     const db = firebase.firestore().collection("users");
     let data = {
@@ -31,8 +35,6 @@ class Home extends Component {
       youOwe: 200,
       youAreOwed: 100,
       friends: [
-        { name: "Hassaan", balance: 1024 },
-        { name: "Yatin", balance: -500.36 },
       ]
     };
     data.userId = signedInUser;
@@ -44,17 +46,19 @@ class Home extends Component {
       let friend = {};
       friend.name = item.data().Name;
       friend.balance = item.data().Balance;
+      friend.email = item.data().email;
       data.friends.push(friend);
     });
     this.setState({currData:data});
-
   }
   toggleFriendTransaction = () => {
     console.log("toggling");
     this.setState({ showFriendTransaction: !this.state.showFriendTransaction });
   };
   updateCurrData=()=>{
-    
+    console.log("triggering");
+    this.updateState();
+    console.log("updated the state");
   }
   render() {
     return (
@@ -83,7 +87,7 @@ class Home extends Component {
               </TabHeading>
             }
           >
-            {Object.keys(this.state.currData).length > 0 && <HomeScreen screenProps={this.props} data={this.state.currData}/>}
+            {Object.keys(this.state.currData).length > 0 && <HomeScreen update={this.updateCurrData}screenProps={this.props} data={this.state.currData}/>}
           </Tab>
           {/* <Tab
             heading={
