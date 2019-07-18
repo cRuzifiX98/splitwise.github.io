@@ -66,13 +66,13 @@ const data = {
     { Id: 6, name: "Shanmuk", balance: 300.5 },
     { Id: 7, name: "Shubham", balance: 150 },
     { Id: 8, name: "Deepak", balance: 1024 },
-    { Id: 9, name: "Vikash", balance: 2000000 }
+    { Id: 9, name: "Vikash", balance: 200 }
   ]
 };
 
 const updateExpenses = () => {
   data.friends.reduce((youAreOwed, friend) => {
-    if (friend.balance < 0) youAreOwed += friend.balance;
+    if (friend.balance < 0) {youAreOwed += friend.balance;}
   }, 0);
 };
 

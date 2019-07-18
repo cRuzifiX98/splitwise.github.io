@@ -41,6 +41,7 @@
     "native-base": "2.11.0",
     "react": "16.5.0",
     "react-native": "0.57.0",
+    "react-native-modal": "^11.1.0",
     "react-native-popup-menu": "^0.15.6",
     "react-navigation": "3.3.0"
   }

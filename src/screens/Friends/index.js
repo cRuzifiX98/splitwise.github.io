@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   plus: {
     color: "white",
-    fontSize: 36,
+    fontSize: 40,
     // fontFamily: "encoded-sans-light",
     position: "relative",
     top: -2
