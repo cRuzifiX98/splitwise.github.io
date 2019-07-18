@@ -26,7 +26,7 @@ class Transaction extends Component {
               transparent
               onPress={() => this.props.navigation.goBack()}
             >
-              <Icon name="ios-menu" />
+              <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
