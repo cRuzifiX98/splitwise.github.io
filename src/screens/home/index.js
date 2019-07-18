@@ -55,10 +55,11 @@ class Home extends Component {
     console.log("toggling");
     this.setState({ showFriendTransaction: !this.state.showFriendTransaction });
   };
+  // componentWillUnmount(){
+  //   this.setState({currData:{}});
+  // }
   updateCurrData=()=>{
-    console.log("triggering");
     this.updateState();
-    console.log("updated the state");
   }
   render() {
     return (
