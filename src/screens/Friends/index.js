@@ -8,27 +8,6 @@ import {
 import TopCard from "./TopCard";
 import Friends from "./Friends";
 class HomeScreen extends Component {
-  state = {
-    addExpenses: false,
-    data: {
-      userId: 1,
-      firstName: "Souma",
-      lastName: "Ghosh",
-      youOwe: 200,
-      youAreOwed: 100,
-      friends: [
-        { name: "Hassaan", balance: 1024 },
-        { name: "Yatin", balance: -500.36 },
-      ]
-    }
-  };
-
-  toggleAddExpenses = () => {
-    this.setState(prevState => {
-      return { addExpenses: !prevState.addExpenses };
-    });
-  };
-
   render() {
     return (
       <React.Fragment>
@@ -38,7 +17,7 @@ class HomeScreen extends Component {
         </ScrollView>
         <TouchableOpacity
           onPress={() =>
-            this.props.screenProps.navigation.navigate("AddExpense")}
+            this.props.screenProps.navigation.navigate("AddExpense",{update:this.props.update})}
           style={[styles.backGroundOrange, styles.addExpensesBtn]}
         >
           <Text style={styles.plus}>+</Text>

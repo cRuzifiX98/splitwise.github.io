@@ -38,24 +38,23 @@ class LoginScreen extends Component {
                 firebase.auth().signInWithCredential(credential)
                     .then(async (result) => {
                         if (result.additionalUserInfo.isNewUser) {
-                            let temp = await firebase.firestore().collection("/users").get();
-                            temp.docs.forEach(item=>{
-                                if (item.id === result.user.email)
-                                {
-                                    let userData = item.data();
-                                    firebase.firestore().collection("/users").doc(result.user.email).delete();
-                                    firebase.firestore().collection("/users").doc(result.user.uid).set(userData);
-                                    firebase.firestore().collection("/users").doc(result.user.uid).update({
-                                    Name:result.additionalUserInfo.profile.given_name,
-                                    registration_status:true
-                                    });
-                                }
-                            });
+                            // let temp = await firebase.firestore().collection("/users").get();
+                            // temp.docs.forEach(item=>{
+                            //     if (item.id === result.user.email)
+                            //     {
+                            //         let userData = item.data();
+                            //         firebase.firestore().collection("/users").doc(result.user.email).delete();
+                            //         firebase.firestore().collection("/users").doc(result.user.uid).set(userData);
+                            //         firebase.firestore().collection("/users").doc(result.user.uid).update({
+                            //         Name:result.additionalUserInfo.profile.given_name,
+                            //         registration_status:true
+                            //         });
+                            //     }
+                            // });
 
                             firebase.firestore().collection("/users").doc(result.user.uid).set({
                                 Email: result.user.email,
                                 Name: result.additionalUserInfo.profile.given_name,
-                                registration_status:true,
                                 Total_Balance: 0
                             });
                         }

@@ -22,84 +22,14 @@ import {
   StyleSheet,
   View,
   Alert,
-  TouchableOpacity} from "react-native";
-// import Modal from "react-native-modal";
-// import styles from "./styles";
+  TouchableOpacity
+} from "react-native";
 
-let friends = [
-  "sghosh.souma@gmail.com",
-  "shannusrinu@gmail.com",
-  "antaradey25@gmail.com",
-  "vijaysah1995@gmail.com",
-  "sreyaG@gmail.com",
-  "hassanRafi@gmail.com"
-];
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff"
-  },
-  selector: {
-    paddingTop: 10,
-    paddingLeft: 10,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  currency: {
-    fontSize: 25
-  },
-  paddingRight0: {
-    paddingRight: 0
-  },
-  save: {
-    textAlign: "right",
-    color: "#fff"
-  },
-  selectorBtn: {
-    width: "auto",
-    paddingHorizontal: 5,
-    display: "flex",
-    justifyContent: "center"
-  },
-  menu: {
-    width: "100"
-  },
-  flexWrap: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    borderBottomColor: "#fff"
-  },
-  topCard: {
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  memberInput: {
-    padding: 5,
-    backgroundColor: "#DCDCDC",
-    borderRadius: 20,
-    marginHorizontal: 5
-  },
-  flexBetween: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  splitForm: {
-    borderBottomColor: "#fff",
-    paddingRight: 10
-  },
-  done: {
-    marginBottom: 20
-  }
-});
-
-const currEmail = "souma.ghosh@mountblue.io"; // EMAIL OF THE CURRENT LOGGED IN USER -----------------------
-
+import firebase from "firebase";
+import "firebase/firestore";
 class AddExpense extends Component {
   state = {
+    CurrEmail: "",
     email: "",
     title: "",
     amount: "",
@@ -111,26 +41,38 @@ class AddExpense extends Component {
     selectedPerson: 0,
     modalVisible: false,
     selectedSplit: "EQUALLY",
-    selectedFriend: "0"
+    selectedFriend: "0",
+    friends: []
   };
-
-  // getTimeStamp = async () => {
-  //   const currentDate = await new Date();
-  //   const timeArray = [
-  //     currentDate.getHours(),
-  //     currentDate.getMinutes(),
-  //     currentDate.getSeconds(),
-  //     currentDate.getDate(),
-  //     currentDate.getMonth(),
-  //     currentDate.getFullYear()
-  //   ];
-  //   return `${timeArray[0]}:${timeArray[1]}:${timeArray[2]} ${timeArray[3]}-${timeArray[4] +
-  //     1}-${timeArray[5]}`;
-  // };
-
+  componentDidMount() {
+    this.getFriends();
+  }
+  getFriends = async () => {
+    const db = firebase.firestore().collection("users");
+    const userId = firebase.auth().currentUser.uid;
+    const UserEmail = this.getFriendEmail(userId);
+    let friends = [];
+    let userData = await db.docs(userId).collection("Friends").get();
+    userData.map(async (item) => {
+      let friendEmail = await this.getFriendEmail(item.id);
+      friends.push(friendEmail);
+    });
+    this.setState({ friends: friends, currEmail: UserEmail });
+  }
+  getFriendEmail = async (friendId) => {
+    const db = firebase.firestore().collection("users");
+    const temp = await db.get();
+    let friendEmail;
+    temp.docs.forEach(item => {
+      if (item.id.Email === friendId) {
+        friendEmail = item.data().Email;
+      }
+    });
+    return friendEmail;
+  }
   sendData = async () => {
     const members = [...this.state.members];
-    members[0] = currEmail;
+    members[0] = this.state.CurrEmail;
     if (
       this.state.title &&
       this.state.amount &&
@@ -148,13 +90,13 @@ class AddExpense extends Component {
         share: updatedShare,
         paidBy: paidBy
       };
-      console.log(transaction);
+      let addExpense = await this.updateOrAddTransaction(transaction);
       Toast.show({
         text: "Expense saved!",
         // buttonText: "Okay",
         duration: 3000
       });
-      this.props.navigation.navigate("Home");
+      this.goBack();
     } else if (
       this.state.title &&
       this.state.amount &&
@@ -168,18 +110,52 @@ class AddExpense extends Component {
         share: this.state.share,
         paidBy: paidBy
       };
-      console.log(transaction);
+      let addExpense = await this.updateOrAddTransaction(transaction);
       Toast.show({
         text: "Expense saved!",
-        // buttonText: "Okay",
         duration: 3000
       });
-      this.props.navigation.navigate("Home");
+      this.goBack();
     } else {
       Alert.alert("Please fill out all the fields!");
     }
   };
-
+  updateOrAddTransaction = async (obj) => {
+    const db = firebase.firestore().collection("users");
+    const paidByUserId = await this.getFriendId(obj.Paid_by);
+    let newObj = {};
+    for (let i = 0; i < obj.members.length; i++){
+      newObj[obj.members[i]] = obj.Share[i];
+    }
+    Object.keys(newObj).forEach(async (item) => {
+      if (item !== obj.Paid_by){
+        const currentElementId = await this.getFriendId(item);
+        const check = await this.checkIfTheTransactionExists(paidByUserId, currentElementId);
+        let transObj = {
+          Title: obj.Title,
+          Amount: obj.Amount,
+          Paid_by: obj.Paid_by,
+          Share: newObj[item]
+        };
+        if (check) {
+          db.doc(paidByUserId).collection("Transaction").doc(currentElementId).update({
+            Expense: firebase.firestore.FieldValue.arrayUnion(transObj)
+        });
+          db.doc(currentElementId).collection("Transaction").doc(paidByUserId).update({
+            Expense: firebase.firestore.FieldValue.arrayUnion(transObj)
+          });
+        } else {
+          let temporary = [transObj];
+          db.doc(paidByUserId).collection("Transaction").doc(currentElementId).set({
+            Expense: temporary
+          });
+          db.doc(currentElementId).collection("Transaction").doc(paidByUserId).set({
+            Expense: temporary
+          });
+        }
+      }
+    });
+   }
   splitAmount = text => {
     const splitShare = parseFloat(text, 10) / 2;
     this.setState({ amount: text, splitShare: splitShare });
@@ -201,22 +177,33 @@ class AddExpense extends Component {
   };
 
   onValueChange(value) {
-    // console.log(value);
     this.setState({
       selectedPerson: value
     });
   }
-
+  goBack=()=>{
+    const { navigation } = this.props;
+      navigation.goBack();
+      navigation.state.params.update();
+  }
+  getFriendId = async (email) => {
+    const db = firebase.firestore().collection("users");
+    const temp = await db.get();
+    let friendId;
+    temp.docs.forEach(item => {
+        if (item.data().Email === email) {
+            friendId = item.id;
+        }
+    });
+    return friendId;
+   }
   onFriendChange(value) {
-    // this.setState({
-    //   selectedFriend: value
-    // });
     if (value !== "0") {
       const members = [...this.state.members];
       members.push(value);
-      const index = friends.indexOf(value);
+      const index = this.state.friends.indexOf(value);
       if (index !== -1) {
-        friends.splice(index, 1);
+        this.state.friends.splice(index, 1);
       }
       this.setState({ members: members });
     }
@@ -333,7 +320,7 @@ class AddExpense extends Component {
                   onValueChange={this.onFriendChange.bind(this)}
                 >
                   <Picker.Item label={""} value={"0"} />
-                  {friends.map((friend) => {
+                  {this.state.friends.map((friend) => {
                     return <Picker.Item key={friend} label={friend} value={friend} />;
                   })}
                 </Picker>
@@ -436,5 +423,64 @@ class AddExpense extends Component {
     );
   }
 }
-
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#fff"
+  },
+  selector: {
+    paddingTop: 10,
+    paddingLeft: 10,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  currency: {
+    fontSize: 25
+  },
+  paddingRight0: {
+    paddingRight: 0
+  },
+  save: {
+    textAlign: "right",
+    color: "#fff"
+  },
+  selectorBtn: {
+    width: "auto",
+    paddingHorizontal: 5,
+    display: "flex",
+    justifyContent: "center"
+  },
+  menu: {
+    width: "100"
+  },
+  flexWrap: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    borderBottomColor: "#fff"
+  },
+  topCard: {
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  memberInput: {
+    padding: 5,
+    backgroundColor: "#DCDCDC",
+    borderRadius: 20,
+    marginHorizontal: 5
+  },
+  flexBetween: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  splitForm: {
+    borderBottomColor: "#fff",
+    paddingRight: 10
+  },
+  done: {
+    marginBottom: 20
+  }
+});
 export default AddExpense;
