@@ -56,67 +56,71 @@ class AddFriend extends Component {
   state = {
     email: ""
   };
-  addFriend = async (email) => {
+  getFriendId = async (email) => {
+    // const signedInUser = firebase.auth().currentUser.uid;
+    const db = firebase.firestore().collection("users");
+    const temp = await db.get();
+    let friendId = 0;
+    temp.docs.forEach(item => {
+        if (item.data().Email === email) {
+            friendId = item.id;
+        }
+    });
+    return friendId;
+   }
+  addFriend = async (friendId) => {
     try {
+      // console.log(friendId)
     const signedInUser = firebase.auth().currentUser.uid;
     const db = firebase.firestore().collection("users");
-    let currEmail;
-    let currName;
-    db.doc(signedInUser).onSnapshot(item => {
-      currEmail = item.data().Email;
-      currName = item.data().Name;
-    });
-    const temp = await db.get();
-    let friendName;
-    let friendId;
-    temp.docs.forEach(item => {
-      if (item.data().Email === email) {
-        friendName = item.data().Name;
-        friendId = item.id;
-      }
-      else {
-        friendName = email;
-        friendId = email;
-        firebase.firestore().collection("/users").doc(email).set({
-          Email: email,
-          Name: email,
-          registration_status:false,
-          Total_Balance: 0
+    // let currName;
+    const temp = await db.get()
+    db.doc(signedInUser).get().then(item => {
+      // currName = item.data().Name;
+      db.doc(friendId).collection("Friends").doc(signedInUser).set({
+        Name: item.data().Name,
+        Balance: 0
       });
-      }
     });
-    db.doc(friendId).collection("Friends").doc(signedInUser).set({
-      Name: currName,
-      Balance: 0
-    });
-    db.doc(signedInUser).collection("Friends").doc(friendId).set({
-      Name: friendName,
-      Balance: 0
-    });
-  }
+    
+    // let friendName;
+    temp.docs.forEach(item => {
+      if(item.id === friendId) {
+        db.doc(signedInUser).collection("Friends").doc(friendId).set({
+          Name: item.data().Name,
+          Balance: 0
+        });
+      }    
+  })
+}
   catch (error){
     console.log(error);
   }
   };
   sendData = async () => {
     if (this.state.email.includes("@")) {
-      let insertFriend = await this.addFriend(this.state.email);
-      console.log(insertFriend);
+      let friendId = await this.getFriendId(this.state.email);
+      if (friendId != 0){
+      let insertFriend = await this.addFriend(friendId);
       Toast.show({
         text: "Friend Added!",
-        // buttonText: "Okay",
         duration: 3000
       });
-      const { navigation } = this.props;
-      console.log("going back",this.props)
-      
+      this.goBack();
+      }
+      else {
+        Alert.alert("Your friend email not Registered with SplitWise");
+      }
+    }
+    else {
+      Alert.alert("Invalid Input");
+      }
+  };
+  goBack=()=>{
+    const { navigation } = this.props;
       navigation.goBack();
       navigation.state.params.update();
-    } else {
-      Alert.alert("Invalid Input");
-    }
-  };
-
+  }
 
   render() {
     return (
@@ -126,7 +130,7 @@ class AddFriend extends Component {
             <Left>
               <Button
                 transparent
-                onPress={() => this.props.navigation.navigate("Drawer")}
+                onPress={() => this.goBack}
               >
                 <Icon name="arrow-back" />
               </Button>

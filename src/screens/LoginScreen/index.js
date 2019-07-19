@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Button, ImageBackground } from "react-native";
+import { StyleSheet, View ,Image} from "react-native";
+import { Container, Header, Content, Button, Text } from "native-base";
 import firebase from "firebase";
 import * as Expo from "expo";
 import "firebase/firestore";
@@ -37,24 +38,23 @@ class LoginScreen extends Component {
                 firebase.auth().signInWithCredential(credential)
                     .then(async (result) => {
                         if (result.additionalUserInfo.isNewUser) {
-                            let temp = await firebase.firestore().collection("/users").get();
-                            temp.docs.forEach(item=>{
-                                if (item.id === result.user.email)
-                                {
-                                    let userData=item.data();
-                                    firebase.firestore().collection("/users").doc(result.user.email).delete();
-                                    firebase.firestore().collection("/users").doc(result.user.uid).set(userData);
-                                    firebase.firestore().collection("/users").doc(result.user.uid).update({
-                                    Name:result.additionalUserInfo.profile.given_name,
-                                    registration_status:true
-                                    });
-                                }
-                            });
+                            // let temp = await firebase.firestore().collection("/users").get();
+                            // temp.docs.forEach(item=>{
+                            //     if (item.id === result.user.email)
+                            //     {
+                            //         let userData = item.data();
+                            //         firebase.firestore().collection("/users").doc(result.user.email).delete();
+                            //         firebase.firestore().collection("/users").doc(result.user.uid).set(userData);
+                            //         firebase.firestore().collection("/users").doc(result.user.uid).update({
+                            //         Name:result.additionalUserInfo.profile.given_name,
+                            //         registration_status:true
+                            //         });
+                            //     }
+                            // });
 
                             firebase.firestore().collection("/users").doc(result.user.uid).set({
                                 Email: result.user.email,
                                 Name: result.additionalUserInfo.profile.given_name,
-                                registration_status:true,
                                 Total_Balance: 0
                             });
                         }
@@ -87,32 +87,34 @@ class LoginScreen extends Component {
         }
     }
     render() {
-        const uri = "https://miro.medium.com/max/1280/1*wQ7Sfh98orBJWrU9itR1hA.jpeg";
+        const uri = "https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/logo-d23d9f9f3a93162ac760371c8e22fea7e14a9d8491b477e7925e551b14172ada.png";
 
         return (
-
-            <ImageBackground source={{ uri: uri }} style={{ width: "100%", height: "100%" }}>
-                <View style={styles.container}>
-
-                    <Button
-                        title="Sign in with Google"
-                        onPress={() => this.signInWithGoogleAsync()}
-                    />
-
-                </View>
-            </ImageBackground>
-
+            <Container>
+                <Header />
+                <Content>
+                     <View style={styles.container}>
+                        <Image  style={styles.logo} source={{ uri: uri }} />
+                    </View>
+                    <Button block onPress={() => this.signInWithGoogleAsync()} >
+                        <Text>  Sign in with Google </Text>
+                    </Button>
+                </Content>
+            </Container>
         );
     }
 
 }
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      padding:20,
+      paddingTop:160
     },
-});
-
+    logo: {
+      width: 300,
+      height: 300,
+    },
+  });
 export default LoginScreen;
