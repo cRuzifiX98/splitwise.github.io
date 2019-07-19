@@ -70,34 +70,37 @@ class AddFriend extends Component {
    }
   addFriend = async (friendId) => {
     try {
+      // console.log(friendId)
     const signedInUser = firebase.auth().currentUser.uid;
     const db = firebase.firestore().collection("users");
-    let currName;
-    db.doc(signedInUser).onSnapshot(item => {
-      currName = item.data().Name;
+    // let currName;
+    const temp = await db.get()
+    db.doc(signedInUser).get().then(item => {
+      // currName = item.data().Name;
+      db.doc(friendId).collection("Friends").doc(signedInUser).set({
+        Name: item.data().Name,
+        Balance: 0
+      });
     });
-    const temp = await db.get();
-    let friendName;
-    temp.doc(friendId).onSnapshot(item => {
-      friendName = item.data().Name;
-    });
-    db.doc(friendId).collection("Friends").doc(signedInUser).set({
-      Name: currName,
-      Balance: 0
-    });
-    db.doc(signedInUser).collection("Friends").doc(friendId).set({
-      Name: friendName,
-      Balance: 0
-    });
-  }
+    
+    // let friendName;
+    temp.docs.forEach(item => {
+      if(item.id === friendId) {
+        db.doc(signedInUser).collection("Friends").doc(friendId).set({
+          Name: item.data().Name,
+          Balance: 0
+        });
+      }    
+  })
+}
   catch (error){
     console.log(error);
   }
   };
   sendData = async () => {
     if (this.state.email.includes("@")) {
-      let friendId = this.getFriendId(this.state.email);
-      if (!friendId === 0){
+      let friendId = await this.getFriendId(this.state.email);
+      if (friendId != 0){
       let insertFriend = await this.addFriend(friendId);
       Toast.show({
         text: "Friend Added!",
