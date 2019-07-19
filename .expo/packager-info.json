@@ -2,9 +2,9 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://6s-8b5.anonymous.splitwise-betageeks.exp.direct",
   "packagerNgrokUrl": "https://packager.6s-8b5.anonymous.splitwise-betageeks.exp.direct",
-  "ngrokPid": 28882,
+  "ngrokPid": 12463,
   "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 28856,
+  "packagerPort": 19005,
+  "packagerPid": 12429,
   "webpackServerPort": null
 }

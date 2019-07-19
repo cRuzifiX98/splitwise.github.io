@@ -8,6 +8,14 @@ export default {
     width: null,
     height: null
   },
+  header: {
+    backgroundColor: "#5AC5A7"
+  },
+  headerBody: {
+    padddingLeft: 10,
+    backgroundColor: "#5AC5A7",
+    marginLeft: 0
+  },
   logoContainer: {
     flex: 1,
     marginTop: deviceHeight / 8,
@@ -24,5 +32,12 @@ export default {
     color: "#D8D8D8",
     bottom: 6,
     marginTop: 5
+  },
+  headerTitle: {
+    backgroundColor: "#5AC5A7",
+    fontFamily: "SansBold"
+  },
+  TabHeading: {
+    backgroundColor: "#5AC5A7"
   }
 };

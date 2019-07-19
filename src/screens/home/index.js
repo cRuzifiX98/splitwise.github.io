@@ -17,16 +17,16 @@ import {
 import HomeScreen from "../Friends";
 import firebase from "firebase";
 import "firebase/firestore";
+import styles from "./styles";
 class Home extends Component {
   state = {
     addExpenses: false,
     currData: {}
-  }
- componentDidMount(){
+  };
+  componentDidMount() {
     this.updateState();
-
   }
-  updateState = async ()=>{
+  updateState = async () => {
     const signedInUser = firebase.auth().currentUser.uid;
     const db = firebase.firestore().collection("users");
     let data = {
@@ -34,23 +34,22 @@ class Home extends Component {
       firstName: "Souma",
       youOwe: 200,
       youAreOwed: 100,
-      friends: [
-      ]
+      friends: []
     };
     data.userId = signedInUser;
     db.doc(signedInUser).onSnapshot(item => {
       data.firstName = item.data().Name;
     });
     const friends = await db.doc(signedInUser).collection("Friends").get();
-    friends.docs.forEach(item=>{
+    friends.docs.forEach(item => {
       let friend = {};
       friend.name = item.data().Name;
       friend.balance = item.data().Balance;
       friend.email = item.data().email;
       data.friends.push(friend);
     });
-    this.setState({currData:data});
-  }
+    this.setState({ currData: data });
+  };
   toggleFriendTransaction = () => {
     console.log("toggling");
     this.setState({ showFriendTransaction: !this.state.showFriendTransaction });
@@ -58,13 +57,13 @@ class Home extends Component {
   // componentWillUnmount(){
   //   this.setState({currData:{}});
   // }
-  updateCurrData=()=>{
+  updateCurrData = () => {
     this.updateState();
-  }
+  };
   render() {
     return (
       <Container>
-        <Header hasTabs>
+        <Header hasTabs style={styles.header}>
           <Left>
             <Button
               transparent
@@ -73,8 +72,8 @@ class Home extends Component {
               <Icon name="menu" />
             </Button>
           </Left>
-          <Body>
-            <Title>Splitwise</Title>
+          <Body style={styles.headerBody}>
+            <Title style={styles.headerTitle}>Splitwise</Title>
           </Body>
           <Right />
         </Header>
@@ -82,13 +81,18 @@ class Home extends Component {
         <Tabs>
           <Tab
             heading={
-              <TabHeading>
+              <TabHeading style={styles.TabHeading}>
                 <Icon name="person" />
                 <Text>Friends</Text>
               </TabHeading>
             }
           >
-            {Object.keys(this.state.currData).length > 0 && <HomeScreen update={this.updateCurrData}screenProps={this.props} data={this.state.currData}/>}
+            {Object.keys(this.state.currData).length > 0 &&
+              <HomeScreen
+                update={this.updateCurrData}
+                screenProps={this.props}
+                data={this.state.currData}
+              />}
           </Tab>
           {/* <Tab
             heading={

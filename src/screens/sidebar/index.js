@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Image } from "react-native";
-import firebase from "firebase";  
+import firebase from "firebase";
 import {
   Content,
   Text,
@@ -10,7 +10,7 @@ import {
   Container,
   Left,
   Right,
-  Badge,
+  Badge
 } from "native-base";
 import styles from "./style";
 
@@ -53,8 +53,8 @@ class SideBar extends Component {
           bounces={false}
           style={{ flex: 1, backgroundColor: "#fff", top: -1 }}
         >
-          <Image source={drawerCover} style={styles.drawerCover} />
-          <Image square style={styles.drawerImage} source={drawerImage} />
+          {/* <Image source={drawerCover} style={styles.drawerCover} />
+          <Image square style={styles.drawerImage} source={drawerImage} /> */}
 
           <List
             dataArray={datas}
@@ -90,24 +90,17 @@ class SideBar extends Component {
                     </Badge>
                   </Right>}
               </ListItem>}
-              
           />
-          <ListItem
-                button
-                noBorder
-                onPress={() => firebase.auth().signOut()}
-              >
-                <Left>
-                  <Icon
-                    active
-                    name="disc"
-                    style={{ color: "#777", fontSize: 26, width: 30 }}
-                  />
-                  <Text style={styles.text}>
-                    Logout
-                  </Text>
-                </Left>
-              </ListItem>
+          <ListItem button noBorder onPress={() => firebase.auth().signOut()}>
+            <Left>
+              <Icon
+                active
+                name="disc"
+                style={{ color: "#777", fontSize: 26, width: 30 }}
+              />
+              <Text style={styles.text}>Logout</Text>
+            </Left>
+          </ListItem>
         </Content>
       </Container>
     );
