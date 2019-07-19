@@ -13,14 +13,22 @@ import {
   Right,
   Body,
   Tab,
-  Tabs
+  Tabs,
+  Picker
 } from "native-base";
 // import { Grid, Col } from "react-native-easy-grid";
 import styles from "./styles";
 import HomeScreen from "../Friends";
 import Groups from "../Groups";
+import { TouchableOpacity } from "react-native";
 
 class Home extends Component {
+  state = {
+    showMore: false
+  };
+  toggleMore = () => {
+    this.setState({ showMore: !this.state.showMore });
+  };
   toggleFriendTransaction = () => {
     console.log("toggling");
     this.setState({ showFriendTransaction: !this.state.showFriendTransaction });
@@ -41,7 +49,11 @@ class Home extends Component {
           <Body>
             <Title>Splitwise</Title>
           </Body>
-          <Right />
+          <Right style={styles.more}>
+            <TouchableOpacity onPress={this.showMore}>
+              <Icon name="more" style={{ color: "#fff" }} />
+            </TouchableOpacity>
+          </Right>
         </Header>
 
         <Tabs>

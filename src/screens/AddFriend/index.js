@@ -19,8 +19,7 @@ import {
   Label,
   Toast,
   Badge,
-  Picker,
-  Modal
+  Picker
 } from "native-base";
 import {
   StyleSheet,
@@ -29,17 +28,10 @@ import {
   TouchableOpacity,
   TouchableHighlight
 } from "react-native";
-import { MenuProvider } from "react-native-popup-menu";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger
-} from "react-native-popup-menu";
-
+import Modal from "react-native-modal";
 // import styles from "./styles";
 
-const friends = [
+let friends = [
   "sghosh.souma@gmail.com",
   "shannusrinu@gmail.com",
   "antaradey25@gmail.com",
@@ -54,7 +46,7 @@ const styles = StyleSheet.create({
   },
   selector: {
     paddingTop: 10,
-    paddingLeft: 20,
+    paddingLeft: 10,
     display: "flex",
     flexDirection: "row",
     alignItems: "center"
@@ -91,7 +83,7 @@ const styles = StyleSheet.create({
   },
   memberInput: {
     padding: 5,
-    backgroundColor: "#A6A6A6",
+    backgroundColor: "#DCDCDC",
     borderRadius: 20,
     marginHorizontal: 5
   },
@@ -109,7 +101,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const currEmail = "souma.ghosh@mountblue.io";
+const currEmail = "souma.ghosh@mountblue.io"; // EMAIL OF THE CURRENT LOGGED IN USER -----------------------
 
 const userId = 1;
 const friendId = 4;
@@ -119,14 +111,13 @@ class AddFriend extends Component {
     title: "",
     amount: "",
     payer: "YOU",
-    // paidBy: userId, // need access to user id and friend id to set paidBy and paidTo fields
     splitShare: 0,
     split: "EQUALLY",
     members: ["YOU"],
     share: [],
-    selectedPerson: "0",
+    selectedPerson: 0,
     modalVisible: false,
-    selectedSplit: 0,
+    selectedSplit: "EQUALLY",
     selectedFriend: "0"
   };
 
@@ -145,20 +136,46 @@ class AddFriend extends Component {
   // };
 
   sendData = async () => {
-    if (this.state.title && this.state.amount) {
-      // const timeStamp = await this.getTimeStamp();
-      // this.setState;
-      const paidBy = this.state.members[
-        parseInt(this.state.selectedPerson, 10)
-      ];
-      const transactionData = {
+    const members = [...this.state.members];
+    members[0] = currEmail;
+    if (
+      this.state.title &&
+      this.state.amount &&
+      this.state.selectedSplit === "EQUALLY"
+    ) {
+      const updatedShare = this.state.members.map(() => {
+        return this.state.amount / this.state.members.length;
+      });
+      const paidBy = members[this.state.selectedPerson];
+      this.setState({ share: updatedShare });
+      const transaction = {
         title: this.state.title,
         amount: this.state.amount,
-        share: this.state.share,
-        paidBy: paidBy,
-        paidTo: this.state.paidTo
-        // timeStamp: timeStamp
+        members: members,
+        share: updatedShare,
+        paidBy: paidBy
       };
+      console.log(transaction);
+      Toast.show({
+        text: "Expense saved!",
+        // buttonText: "Okay",
+        duration: 3000
+      });
+      this.props.navigation.navigate("Home");
+    } else if (
+      this.state.title &&
+      this.state.amount &&
+      this.state.selectedSplit !== "EQUALLY"
+    ) {
+      const paidBy = members[this.state.selectedPerson];
+      const transaction = {
+        title: this.state.title,
+        amount: this.state.amount,
+        members: members,
+        share: this.state.share,
+        paidBy: paidBy
+      };
+      console.log(transaction);
       Toast.show({
         text: "Expense saved!",
         // buttonText: "Okay",
@@ -166,16 +183,8 @@ class AddFriend extends Component {
       });
       this.props.navigation.navigate("Home");
     } else {
-      Alert.alert("Please fill out all the fields");
+      Alert.alert("Please fill out all the fields!");
     }
-  };
-
-  // friendPays = () => {
-  //   this.setState({ payer: "FRIEND", paidBy: friendId, paidTo: userId });
-  // };
-
-  youPay = () => {
-    this.setState({ payer: "YOU", paidBy: userId, paidTo: friendId });
   };
 
   splitAmount = text => {
@@ -212,67 +221,61 @@ class AddFriend extends Component {
     if (value !== "0") {
       const members = [...this.state.members];
       members.push(value);
+      const index = friends.indexOf(value);
+      if (index !== -1) {
+        friends.splice(index, 1);
+      }
       this.setState({ members: members });
     }
   }
 
   onSplitValueChange(value) {
-    // console.log(value);
-    this.setState(prevState => {
-      return { selectedSplit: value, modalVisible: !prevState.modalVisible };
-    });
-  }
-
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
+    if (value !== "EQUALLY") {
+      this.setState(prevState => {
+        return { selectedSplit: value, modalVisible: !prevState.modalVisible };
+      });
+    } else {
+      this.setState({ selectedSplit: value, modalVisible: false });
+    }
   }
 
   handleShares = (idx, value) => {
-    // /console.log(idx, value);
-    console.log("editing done");
-    // const updatedShare = [...this.state.share];
-    // if (updatedShare.length === this.state.members.length) {
-    //   updatedShare[idx] = value;
-    // }
-
-    // if (updatedShare.length < this.state.members.length) {
-    //   updatedShare[idx] = value;
-    // }
-    // this.setState({ share: updatedShare });
-  };
-  shareHandler = (idx, value) => {
     if (this.state.share.length === 0) {
-      var updatedShare = Array(this.state.members.length).fill(0);
-      updatedShare[idx] = value;
-      console.log("length 0");
-      console.log("inside on submit" + updatedShare);
+      let updatedShare = this.state.members.map(() => {
+        return 0;
+      });
       this.setState({ share: updatedShare });
     } else {
-      console.log("length 1");
-      var updatedShare = [...this.state.share];
+      let updatedShare = [...this.state.share];
       updatedShare[idx] = value;
-      console.log(updatedShare);
       this.setState({ share: updatedShare });
     }
   };
+
   handleShareSubmit = () => {
-    console.log("inside on done" + this.state.share);
-    // const totalAmount = this.state.share.reduce((total, currAmt) => {
-    //   console.log(currAmt);
-    //   total += currAmt;
-    //   return total;
-    // }, 0);
-    // console.log(this.state.amount);
-    console.log(this.state.amount);
-    this.setState(prevState => {
-      return { modalVisible: !prevState.modalVisible };
-    });
+    const totalAmount = this.state.share.reduce((total, currShare) => {
+      total += parseFloat(currShare);
+      return total;
+    }, 0);
+    if (totalAmount !== parseFloat(this.state.amount)) {
+      Alert.alert("The math doesn't really add up!");
+    } else {
+      Alert.alert("Well Calculated!");
+      this.setState({ modalVisible: !this.state.modalVisible });
+    }
   };
 
-  closeModal = () => {
-    this.setState(prevState => {
-      return { modalVisible: !prevState.modalVisible };
-    });
+  toggleModal = () => {
+    this.setState({ modalVisible: !this.state.modalVisible });
+  };
+
+  popMember = () => {
+    console.log("popping");
+    if (this.state.members.length >= 2) {
+      let members = this.state.members;
+      members.pop();
+      this.setState({ members: members });
+    }
   };
 
   render() {
@@ -316,10 +319,18 @@ class AddFriend extends Component {
                 })}
                 <Input
                   id="email"
-                  placeholder="email"
                   value={this.state.email}
                   onChangeText={text => this.setState({ email: text })}
                   onSubmitEditing={this.submitHandler}
+                  onKeyPress={({ nativeEvent }) => {
+                    if (
+                      nativeEvent.keyCode === "Backspace" ||
+                      nativeEvent.keyCode === 8 ||
+                      nativeEvent.key === 8
+                    ) {
+                      this.popMember;
+                    }
+                  }}
                 />
                 <Picker
                   note
@@ -370,9 +381,7 @@ class AddFriend extends Component {
                   onValueChange={this.onValueChange.bind(this)}
                 >
                   {this.state.members.map((member, idx) => {
-                    return (
-                      <Picker.Item label={member} value={idx.toString()} />
-                    );
+                    return <Picker.Item label={member} value={idx} />;
                   })}
                 </Picker>
               </Form>
@@ -387,8 +396,12 @@ class AddFriend extends Component {
                   selectedValue={this.state.selectedSplit}
                   onValueChange={this.onSplitValueChange.bind(this)}
                 >
-                  <Picker.Item key={0} label="EQUALLY" value="0" />
-                  <Picker.Item key={1} label="Split By Share" value="1" />
+                  <Picker.Item key={0} label="EQUALLY" value="EQUALLY" />
+                  <Picker.Item
+                    key={1}
+                    label="Split By Share"
+                    value="Split By Share"
+                  />
                 </Picker>
               </Form>
             </Button>
@@ -406,11 +419,8 @@ class AddFriend extends Component {
                         <Input
                           id={idx}
                           placeholder={"0.00"}
-                          // defaultValue={"0"}
                           keyboardType={"numeric"}
-                          // onChangeText={value => this.handleShares(idx, value)}
-                          onSubmitEditing={value =>
-                            this.shareHandler(idx, value)}
+                          onChangeText={value => this.handleShares(idx, value)}
                         />
                       </Right>
                     </Item>

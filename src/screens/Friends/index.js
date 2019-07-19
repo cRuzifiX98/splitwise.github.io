@@ -61,10 +61,10 @@ class HomeScreen extends Component {
         { name: "Vivek", balance: 0 },
         { name: "Madhu", balance: 100.88 },
         { name: "Rizwan", balance: -200.55 },
-        { Id: 6, name: "Shanmuk", balance: 300.5 },
-        { Id: 7, name: "Shubham", balance: 150 },
-        { Id: 8, name: "Deepak", balance: 1024 },
-        { Id: 9, name: "Vikash", balance: 2000000 }
+        { name: "Shanmuk", balance: 300.5 },
+        { name: "Shubham", balance: 150 },
+        { name: "Deepak", balance: 1024 },
+        { name: "Vikash", balance: 2000000 }
       ]
     }
   };
