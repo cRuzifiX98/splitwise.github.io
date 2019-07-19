@@ -1,50 +1,47 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Alert
-} from "react-native";
-import {
-  Button,
-  Thumbnail,
-  Card,
-  CardItem} from "native-base";
+import { StyleSheet, Text, View, Alert } from "react-native";
+import { Button, Thumbnail, Card, CardItem } from "native-base";
 // import console = require("console");
 import firebase from "firebase";
 import "firebase/firestore";
 
-const getAllTransactionDetails = async (friendId) => {
+const getAllTransactionDetails = async friendId => {
   const db = firebase.firestore().collection("users");
   const signedInUser = firebase.auth().currentUser.uid;
-  const temp = await db.doc(signedInUser).collection("Transaction").docs(friendId).get();
+  const temp = await db
+    .doc(signedInUser)
+    .collection("Transaction")
+    .docs(friendId)
+    .get();
   const result = temp.docs.map(item => item.data());
   return result;
- };
- let getFriendId = async (email) => {
+};
+let getFriendId = async email => {
   const db = firebase.firestore().collection("users");
   const temp = await db.get();
   let friendId;
   temp.docs.forEach(item => {
-      if (item.data().Email === email) {
-          friendId = item.id;
-      }
+    if (item.data().Email === email) {
+      friendId = item.id;
+    }
   });
   return friendId;
- };
+};
 export default function Friends(props) {
   // const data = [...props.data];
 
   return (
     <React.Fragment>
       {props.data.friends.map(friend => {
-        let friendId=getFriendId(friend.email);
+        let friendId = getFriendId(friend.email);
         return (
           <Card transparent key={friend.name}>
             <CardItem
               button
-              onPress={() =>props.screenProps.navigation.navigate("Transaction",{ data: getAllTransactionDetails(friendId) })
-                }
+              onPress={() =>
+                props.screenProps.navigation.navigate("Transaction", {
+                  data: getAllTransactionDetails(friendId)
+                })}
               key={friend.name}
               style={[styles.paddingBottom0]}
             >
@@ -59,7 +56,8 @@ export default function Friends(props) {
                   {friend.name}
                 </Text>
               </View>
-              {friend.balance === 0 ? <View style={styles.marginLeftAuto}>
+              {friend.balance === 0
+                ? <View style={styles.marginLeftAuto}>
                     <Text
                       style={[
                         styles.textAlignRight,
@@ -69,64 +67,64 @@ export default function Friends(props) {
                     >
                       Settled up
                     </Text>
-
                   </View>
-              : friend.balance < 0 ?
-              <View style={styles.marginLeftAuto}>
-                    <Text
-                      style={[
-                        styles.textAlignRight,
-                        styles.primary,
-                        styles.smallFont
-                      ]}
-                    >
-                      you are owed
-                    </Text>
-                    <Text
-                      style={[
-                        styles.bigFont,
-                        styles.textAlignRight,
-                        styles.primary
-                      ]}
-                    >
-                      {"\u20B9"}
-                      {friend.balance - 2 * friend.balance}
-                    </Text>
-                  </View>
-                : <View style={styles.marginLeftAuto}>
-                    <Text
-                      style={[
-                        styles.orange,
-                        styles.textAlignRight,
-                        styles.smallFont
-                      ]}
-                    >
-                      you owe
-                    </Text>
-                    <Text
-                      style={[
-                        styles.bigFont,
-                        styles.textAlignRight,
-                        styles.orange
-                      ]}
-                    >
-                      {"\u20B9"}
-                      {friend.balance}
-                    </Text>
-                  </View>}
-
+                : friend.balance < 0
+                  ? <View style={styles.marginLeftAuto}>
+                      <Text
+                        style={[
+                          styles.textAlignRight,
+                          styles.primary,
+                          styles.smallFont
+                        ]}
+                      >
+                        you are owed
+                      </Text>
+                      <Text
+                        style={[
+                          styles.bigFont,
+                          styles.textAlignRight,
+                          styles.primary
+                        ]}
+                      >
+                        {"\u20B9"}
+                        {friend.balance - 2 * friend.balance}
+                      </Text>
+                    </View>
+                  : <View style={styles.marginLeftAuto}>
+                      <Text
+                        style={[
+                          styles.orange,
+                          styles.textAlignRight,
+                          styles.smallFont
+                        ]}
+                      >
+                        you owe
+                      </Text>
+                      <Text
+                        style={[
+                          styles.bigFont,
+                          styles.textAlignRight,
+                          styles.orange
+                        ]}
+                      >
+                        {"\u20B9"}
+                        {friend.balance}
+                      </Text>
+                    </View>}
             </CardItem>
           </Card>
         );
       })}
       <Button
         onPress={() =>
-          props.screenProps.navigation.navigate("AddFriend",{ update: props.update })}
+          props.screenProps.navigation.navigate("AddFriend", {
+            update: props.update
+          })}
         block
         light
         style={[styles.button, styles.grayBackGround]}
       >
-        <Text style={styles.primaryFont} >+ ADD MORE FRIENDS</Text>
+        <Text style={styles.primaryFont}>+ ADD MORE FRIENDS</Text>
       </Button>
     </React.Fragment>
   );

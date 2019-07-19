@@ -10,9 +10,15 @@ import {
   Container,
   Left,
   Right,
-  Badge
+  Badge,
+  Card,
+  CardItem,
+  Thumbnail
 } from "native-base";
 import styles from "./style";
+
+const name = "Souma Ghosh";
+const email = "sghosh.souma@gmail.com";
 
 const drawerCover = require("../../../assets/drawer-cover.png");
 const drawerImage = require("../../../assets/logo-kitchen-sink.png");
@@ -48,14 +54,29 @@ class SideBar extends Component {
 
   render() {
     return (
-      <Container>
+      <Container style={styles.Container}>
         <Content
           bounces={false}
-          style={{ flex: 1, backgroundColor: "#fff", top: -1 }}
+          style={{ flex: 1, backgroundColor: "#fff", top: -1, margin: 0 }}
         >
           {/* <Image source={drawerCover} style={styles.drawerCover} />
           <Image square style={styles.drawerImage} source={drawerImage} /> */}
-
+          <Card style={styles.Card}>
+            <CardItem style={styles.sidebarInfo}>
+              <Thumbnail
+                style={styles.thumbnailPrimary}
+                source={{
+                  uri: "https://api.adorable.io/avatars/100/ghosh"
+                }}
+              />
+              <Text>
+                {name}
+              </Text>
+              <Text>
+                {email}
+              </Text>
+            </CardItem>
+          </Card>
           <List
             dataArray={datas}
             renderRow={data =>

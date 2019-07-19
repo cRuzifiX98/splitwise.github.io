@@ -18,18 +18,13 @@ import HomeScreen from "../Friends";
 import firebase from "firebase";
 import "firebase/firestore";
 import styles from "./styles";
+// import Groups from "../Groups";
 class Home extends Component {
   state = {
     addExpenses: false,
     currData: {}
-<<<<<<< HEAD
   };
   componentDidMount() {
-=======
-  }
-  componentDidMount() {
-    
->>>>>>> CRNA
     this.updateState();
   }
   updateState = async () => {
@@ -47,18 +42,7 @@ class Home extends Component {
       data.firstName = item.data().Name;
     });
     const friends = await db.doc(signedInUser).collection("Friends").get();
-<<<<<<< HEAD
-    friends.docs.forEach(item => {
-      let friend = {};
-      friend.name = item.data().Name;
-      friend.balance = item.data().Balance;
-      friend.email = item.data().email;
-      data.friends.push(friend);
-    });
-    this.setState({ currData: data });
-  };
-=======
-    if (friends != undefined){
+    if (friends != undefined) {
       friends.docs.forEach(item => {
         let friend = {};
         friend.name = item.data().Name;
@@ -68,38 +52,26 @@ class Home extends Component {
       });
       this.setState({ currData: data });
     }
-    
-  }
->>>>>>> CRNA
+  };
   toggleFriendTransaction = () => {
     console.log("toggling");
     this.setState({ showFriendTransaction: !this.state.showFriendTransaction });
   };
-<<<<<<< HEAD
-  // componentWillUnmount(){
-  //   this.setState({currData:{}});
-  // }
   updateCurrData = () => {
     this.updateState();
   };
-=======
-  updateCurrData = () => {
-    this.updateState();
 
-  }
- 
-   getFriendId = async (email) => {
+  getFriendId = async email => {
     const db = firebase.firestore().collection("users");
     const temp = await db.get();
     let friendId;
     temp.docs.forEach(item => {
-        if (item.data().Email === email) {
-            friendId = item.id;
-        }
+      if (item.data().Email === email) {
+        friendId = item.id;
+      }
     });
     return friendId;
-   }
->>>>>>> CRNA
+  };
   render() {
     return (
       <Container>
@@ -127,16 +99,12 @@ class Home extends Component {
               </TabHeading>
             }
           >
-<<<<<<< HEAD
             {Object.keys(this.state.currData).length > 0 &&
               <HomeScreen
                 update={this.updateCurrData}
                 screenProps={this.props}
                 data={this.state.currData}
               />}
-=======
-            {Object.keys(this.state.currData).length > 0 && <HomeScreen update={this.updateCurrData} screenProps={this.props} data={this.state.currData} />}
->>>>>>> CRNA
           </Tab>
           {/* <Tab
             heading={
@@ -145,9 +113,8 @@ class Home extends Component {
                 <Text>Group</Text>
               </TabHeading>
             }
-          > */}
-          {/* <GroupsPage /> */}
-          {/* <Groups />
+          >
+            <Groups />
           </Tab> */}
           {/* <Tab
             heading={

@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     marginLeft: "auto"
   },
   margin0: {
-    margin: 0
+    marginTop: 0
   },
   marginTop20: {
     marginTop: 20

@@ -1,10 +1,5 @@
-
 import React, { Component } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity} from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import TopCard from "./TopCard";
 import Friends from "./Friends";
 class HomeScreen extends Component {
@@ -13,11 +8,17 @@ class HomeScreen extends Component {
       <React.Fragment>
         <ScrollView style={styles.container}>
           <TopCard />
-          <Friends update={this.props.update} data={this.props.data} screenProps={this.props.screenProps}/>
+          <Friends
+            update={this.props.update}
+            data={this.props.data}
+            screenProps={this.props.screenProps}
+          />
         </ScrollView>
         <TouchableOpacity
           onPress={() =>
-            this.props.screenProps.navigation.navigate("AddExpense",{update:this.props.update})}
+            this.props.screenProps.navigation.navigate("AddExpense", {
+              update: this.props.update
+            })}
           style={[styles.backGroundOrange, styles.addExpensesBtn]}
         >
           <Text style={styles.plus}>+</Text>
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
     // fontFamily: "encoded-sans-medium"
   },
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop: 0
   },
   backGroundOrange: {
     backgroundColor: "#FF692C"
