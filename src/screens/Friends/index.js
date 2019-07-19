@@ -1,21 +1,7 @@
-// import * as WebBrowser from "expo-web-browser";
 import React, { Component } from "react";
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  Button,
-  TouchableOpacity,
-  View,
-  Alert
-} from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import TopCard from "./TopCard";
 import Friends from "./Friends";
-// import console = require("console");
-// import { MonoText } from "../components/StyledText";
-// import { H1, Container, , Icon } from "native-base";
 class HomeScreen extends Component {
   state = {
     addExpenses: false,
@@ -25,46 +11,9 @@ class HomeScreen extends Component {
       lastName: "Ghosh",
       youOwe: 200,
       youAreOwed: 100,
-      // groups: [
-      //   {
-      //     name: "Pub",
-      //     balance: 200,
-      //     members: [
-      //       {
-      //         name: "Vijay",
-      //         balance: 50
-      //       },
-      //       {
-      //         name: "Shanmuk",
-      //         balance: -80
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     name: "Holiday",
-      //     balance: -200,
-      //     members: [
-      //       {
-      //         name: "Dhruvil",
-      //         balance: -50
-      //       },
-      //       {
-      //         name: "Ram",
-      //         balance: 80
-      //       }
-      //     ]
-      //   }
-      // ],
       friends: [
         { name: "Hassaan", balance: 1024 },
-        { name: "Yatin", balance: -500.36 },
-        { name: "Vivek", balance: 0 },
-        { name: "Madhu", balance: 100.88 },
-        { name: "Rizwan", balance: -200.55 },
-        { name: "Shanmuk", balance: 300.5 },
-        { name: "Shubham", balance: 150 },
-        { name: "Deepak", balance: 1024 },
-        { name: "Vikash", balance: 2000000 }
+        { name: "Yatin", balance: -500.36 }
       ]
     }
   };
@@ -80,11 +29,15 @@ class HomeScreen extends Component {
       <React.Fragment>
         <ScrollView style={styles.container}>
           <TopCard />
-          <Friends />
+          <Friends
+            update={this.props.update}
+            data={this.props.data}
+            screenProps={this.props.screenProps}
+          />
         </ScrollView>
         <TouchableOpacity
           onPress={() =>
-            this.props.screenProps.navigation.navigate("AddFriend")}
+            this.props.screenProps.navigation.navigate("AddExpense")}
           style={[styles.backGroundOrange, styles.addExpensesBtn]}
         >
           <Text style={styles.plus}>+</Text>

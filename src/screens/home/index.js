@@ -2,7 +2,6 @@ import React, { Component } from "react";
 // import { ImageBackground, View, StatusBar,StyleSheet } from "react-native";
 import {
   Container,
-  H3,
   Text,
   Header,
   TabHeading,
@@ -16,27 +15,54 @@ import {
   Tabs,
   Picker
 } from "native-base";
-// import { Grid, Col } from "react-native-easy-grid";
-import styles from "./styles";
 import HomeScreen from "../Friends";
-import Groups from "../Groups";
-import { TouchableOpacity } from "react-native";
-
+import firebase from "firebase";
+import "firebase/firestore";
 class Home extends Component {
   state = {
-    showMore: false
+    addExpenses: false,
+    currData: {}
   };
-  toggleMore = () => {
-    this.setState({ showMore: !this.state.showMore });
+  componentDidMount() {
+    this.updateState();
+  }
+  updateState = async () => {
+    const signedInUser = firebase.auth().currentUser.uid;
+    const db = firebase.firestore().collection("users");
+    let data = {
+      userId: 1,
+      firstName: "Souma",
+      youOwe: 200,
+      youAreOwed: 100,
+      friends: []
+    };
+    data.userId = signedInUser;
+    db.doc(signedInUser).onSnapshot(item => {
+      data.firstName = item.data().Name;
+    });
+    const friends = await db.doc(signedInUser).collection("Friends").get();
+    friends.docs.forEach(item => {
+      let friend = {};
+      friend.name = item.data().Name;
+      friend.balance = item.data().Balance;
+      friend.email = item.data().email;
+      data.friends.push(friend);
+    });
+    this.setState({ currData: data });
   };
   toggleFriendTransaction = () => {
     console.log("toggling");
     this.setState({ showFriendTransaction: !this.state.showFriendTransaction });
   };
+  // componentWillUnmount(){
+  //   this.setState({currData:{}});
+  // }
+  updateCurrData = () => {
+    this.updateState();
+  };
   render() {
     return (
       <Container>
-        {/* <StatusBar barStyle="light-content" /> */}
         <Header hasTabs>
           <Left>
             <Button
@@ -65,7 +91,12 @@ class Home extends Component {
               </TabHeading>
             }
           >
-            <HomeScreen screenProps={this.props} />
+            {Object.keys(this.state.currData).length > 0 &&
+              <HomeScreen
+                update={this.updateCurrData}
+                screenProps={this.props}
+                data={this.state.currData}
+              />}
           </Tab>
           {/* <Tab
             heading={

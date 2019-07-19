@@ -1,93 +1,36 @@
 import React from "react";
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  TouchableHighlight,
-  TouchableOpacity,
-  Alert
-} from "react-native";
-import {
-  Container,
-  Header,
-  Button,
-  H1,
-  H2,
-  Thumbnail,
-  Icon,
-  Card,
-  CardItem,
-  Right
-} from "native-base";
+import { StyleSheet, Text, View, Alert } from "react-native";
+import { Button, Thumbnail, Card, CardItem } from "native-base";
+// import console = require("console");
+import firebase from "firebase";
+import "firebase/firestore";
 
-const data = {
-  userId: 1,
-  firstName: "Souma",
-  lastName: "Ghosh",
-  youOwe: 200,
-  youAreOwed: 100,
-  // groups: [
-  //   {
-  //     name: "Pub",
-  //     balance: 200,
-  //     members: [
-  //       {
-  //         name: "Vijay",
-  //         balance: 50
-  //       },
-  //       {
-  //         name: "Shanmuk",
-  //         balance: -80
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     name: "Holiday",
-  //     balance: -200,
-  //     members: [
-  //       {
-  //         name: "Dhruvil",
-  //         balance: -50
-  //       },
-  //       {
-  //         name: "Ram",
-  //         balance: 80
-  //       }
-  //     ]
-  //   }
-  // ],
-  friends: [
-    { name: "Hassaan", balance: 1024 },
-    { name: "Yatin", balance: -500.36 },
-    { name: "Vivek", balance: 0 },
-    { name: "Madhu", balance: 100.88 },
-    { name: "Rizwan", balance: -200.55 },
-    { Id: 6, name: "Shanmuk", balance: 300.5 },
-    { Id: 7, name: "Shubham", balance: 150 },
-    { Id: 8, name: "Deepak", balance: 1024 },
-    { Id: 9, name: "Vikash", balance: 200 }
-  ]
-};
-
-const updateExpenses = () => {
-  data.friends.reduce((youAreOwed, friend) => {
-    if (friend.balance < 0) {youAreOwed += friend.balance;}
-  }, 0);
+const getAllTransactionDetails = async friendId => {
+  const db = firebase.firestore().collection("users");
+  const signedInUser = firebase.auth().currentUser.uid;
+  const temp = await db
+    .doc(signedInUser)
+    .collection("Transaction")
+    .docs(friendId)
+    .get();
+  const result = temp.docs.map(item => item.data());
+  return result;
 };
 
 export default function Friends(props) {
+  // const data = [...props.data];
+
   return (
     <React.Fragment>
-      {data.friends.map(friend => {
+      {props.data.friends.map(friend => {
         return (
           <Card transparent key={friend.name}>
             <CardItem
               button
               onPress={() =>
-                Alert.alert(
-                  "Want to view transactions? We will be addding this feature soon!!"
-                )}
+                props.screenProps.navigation.navigate("Transaction", {
+                  data: getAllTransactionDetails(friend.email)
+                })}
               key={friend.name}
               style={[styles.paddingBottom0]}
             >
@@ -102,56 +45,70 @@ export default function Friends(props) {
                   {friend.name}
                 </Text>
               </View>
-              {friend.balance < 0
+              {friend.balance === 0
                 ? <View style={styles.marginLeftAuto}>
                     <Text
                       style={[
                         styles.textAlignRight,
-                        styles.primary,
+                        styles.gray,
                         styles.smallFont
                       ]}
                     >
-                      you are owed
-                    </Text>
-                    <Text
-                      style={[
-                        styles.bigFont,
-                        styles.textAlignRight,
-                        styles.primary
-                      ]}
-                    >
-                      {"\u20B9"}
-                      {friend.balance - 2 * friend.balance}
+                      Settled up
                     </Text>
                   </View>
-                : <View style={styles.marginLeftAuto}>
-                    <Text
-                      style={[
-                        styles.orange,
-                        styles.textAlignRight,
-                        styles.smallFont
-                      ]}
-                    >
-                      you owe
-                    </Text>
-                    <Text
-                      style={[
-                        styles.bigFont,
-                        styles.textAlignRight,
-                        styles.orange
-                      ]}
-                    >
-                      {"\u20B9"}
-                      {friend.balance}
-                    </Text>
-                  </View>}
+                : friend.balance < 0
+                  ? <View style={styles.marginLeftAuto}>
+                      <Text
+                        style={[
+                          styles.textAlignRight,
+                          styles.primary,
+                          styles.smallFont
+                        ]}
+                      >
+                        you are owed
+                      </Text>
+                      <Text
+                        style={[
+                          styles.bigFont,
+                          styles.textAlignRight,
+                          styles.primary
+                        ]}
+                      >
+                        {"\u20B9"}
+                        {friend.balance - 2 * friend.balance}
+                      </Text>
+                    </View>
+                  : <View style={styles.marginLeftAuto}>
+                      <Text
+                        style={[
+                          styles.orange,
+                          styles.textAlignRight,
+                          styles.smallFont
+                        ]}
+                      >
+                        you owe
+                      </Text>
+                      <Text
+                        style={[
+                          styles.bigFont,
+                          styles.textAlignRight,
+                          styles.orange
+                        ]}
+                      >
+                        {"\u20B9"}
+                        {friend.balance}
+                      </Text>
+                    </View>}
             </CardItem>
           </Card>
         );
       })}
       <Button
         onPress={() =>
-          Alert.alert("Want to add friends? We will add this feature soon!!")}
+          props.screenProps.navigation.navigate("AddFriend", {
+            update: props.update
+          })}
         block
         light
         style={[styles.button, styles.grayBackGround]}

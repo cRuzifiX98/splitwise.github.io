@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Button, ImageBackground } from "react-native";
+import { StyleSheet, View, Button, ImageBackground } from "react-native";
 import firebase from "firebase";
 import * as Expo from "expo";
+import "firebase/firestore";
+
 class LoginScreen extends Component {
 
     isUserEqual = (googleUser, firebaseUser) => {
@@ -33,11 +35,27 @@ class LoginScreen extends Component {
                 );
                 // Sign in with credential from the Google user.
                 firebase.auth().signInWithCredential(credential)
-                    .then(result => {
+                    .then(async (result) => {
                         if (result.additionalUserInfo.isNewUser) {
-                            firebase.database().ref("/users/" + result.user.uid).set({
+                            let temp = await firebase.firestore().collection("/users").get();
+                            temp.docs.forEach(item=>{
+                                if (item.id === result.user.email)
+                                {
+                                    let userData=item.data();
+                                    firebase.firestore().collection("/users").doc(result.user.email).delete();
+                                    firebase.firestore().collection("/users").doc(result.user.uid).set(userData);
+                                    firebase.firestore().collection("/users").doc(result.user.uid).update({
+                                    Name:result.additionalUserInfo.profile.given_name,
+                                    registration_status:true
+                                    });
+                                }
+                            });
+
+                            firebase.firestore().collection("/users").doc(result.user.uid).set({
                                 Email: result.user.email,
-                                Name: result.additionalUserInfo.profile.given_name
+                                Name: result.additionalUserInfo.profile.given_name,
+                                registration_status:true,
+                                Total_Balance: 0
                             });
                         }
 
@@ -54,7 +72,7 @@ class LoginScreen extends Component {
     signInWithGoogleAsync = async () => {
         try {
             const result = await Expo.Google.logInAsync({
-                androidClientId: "968874828576-mq0ihtcecavhc1ja5rboipojsmngpmfv.apps.googleusercontent.com",
+                androidClientId: "800905166300-7nco6j2se6dd7ej439vs6u1fivott1lg.apps.googleusercontent.com",
                 // iosClientId: YOUR_CLIENT_ID_HERE,
                 scopes: ["profile", "email"],
             });

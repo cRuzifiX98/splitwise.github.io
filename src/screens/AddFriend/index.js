@@ -7,8 +7,6 @@ import {
   Text,
   Button,
   Icon,
-  Footer,
-  FooterTab,
   Left,
   Right,
   Body,
@@ -16,30 +14,10 @@ import {
   Item,
   Form,
   Card,
-  Label,
-  Toast,
-  Badge,
-  Picker
+  Toast
 } from "native-base";
-import {
-  StyleSheet,
-  View,
-  Alert,
-  TouchableOpacity,
-  TouchableHighlight
-} from "react-native";
-import Modal from "react-native-modal";
-// import styles from "./styles";
-
-let friends = [
-  "sghosh.souma@gmail.com",
-  "shannusrinu@gmail.com",
-  "antaradey25@gmail.com",
-  "vijaysah1995@gmail.com",
-  "sreyaG@gmail.com",
-  "hassanRafi@gmail.com"
-];
-
+import { StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { MenuProvider } from "react-native-popup-menu";
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff"
@@ -100,100 +78,70 @@ const styles = StyleSheet.create({
     marginBottom: 20
   }
 });
+import firebase from "firebase";
+import "firebase/firestore";
 
-const currEmail = "souma.ghosh@mountblue.io"; // EMAIL OF THE CURRENT LOGGED IN USER -----------------------
-
-const userId = 1;
-const friendId = 4;
 class AddFriend extends Component {
   state = {
-    email: "",
-    title: "",
-    amount: "",
-    payer: "YOU",
-    splitShare: 0,
-    split: "EQUALLY",
-    members: ["YOU"],
-    share: [],
-    selectedPerson: 0,
-    modalVisible: false,
-    selectedSplit: "EQUALLY",
-    selectedFriend: "0"
+    email: ""
   };
-
-  // getTimeStamp = async () => {
-  //   const currentDate = await new Date();
-  //   const timeArray = [
-  //     currentDate.getHours(),
-  //     currentDate.getMinutes(),
-  //     currentDate.getSeconds(),
-  //     currentDate.getDate(),
-  //     currentDate.getMonth(),
-  //     currentDate.getFullYear()
-  //   ];
-  //   return `${timeArray[0]}:${timeArray[1]}:${timeArray[2]} ${timeArray[3]}-${timeArray[4] +
-  //     1}-${timeArray[5]}`;
-  // };
-
+  addFriend = async email => {
+    try {
+      const signedInUser = firebase.auth().currentUser.uid;
+      const db = firebase.firestore().collection("users");
+      let currEmail;
+      let currName;
+      db.doc(signedInUser).onSnapshot(item => {
+        currEmail = item.data().Email;
+        currName = item.data().Name;
+      });
+      const temp = await db.get();
+      let friendName;
+      let friendId;
+      temp.docs.forEach(item => {
+        if (item.data().Email === email) {
+          friendName = item.data().Name;
+          friendId = item.id;
+        } else {
+          friendName = email;
+          friendId = email;
+          firebase.firestore().collection("/users").doc(email).set({
+            Email: email,
+            Name: email,
+            registration_status: false,
+            Total_Balance: 0
+          });
+        }
+      });
+      db.doc(friendId).collection("Friends").doc(signedInUser).set({
+        Name: currName,
+        Balance: 0
+      });
+      db.doc(signedInUser).collection("Friends").doc(friendId).set({
+        Name: friendName,
+        Balance: 0
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   sendData = async () => {
-    const members = [...this.state.members];
-    members[0] = currEmail;
-    if (
-      this.state.title &&
-      this.state.amount &&
-      this.state.selectedSplit === "EQUALLY"
-    ) {
-      const updatedShare = this.state.members.map(() => {
-        return this.state.amount / this.state.members.length;
-      });
-      const paidBy = members[this.state.selectedPerson];
-      this.setState({ share: updatedShare });
-      const transaction = {
-        title: this.state.title,
-        amount: this.state.amount,
-        members: members,
-        share: updatedShare,
-        paidBy: paidBy
-      };
-      console.log(transaction);
+    if (this.state.email.includes("@")) {
+      let insertFriend = await this.addFriend(this.state.email);
+      console.log(insertFriend);
       Toast.show({
-        text: "Expense saved!",
+        text: "Friend Added!",
         // buttonText: "Okay",
         duration: 3000
       });
-      this.props.navigation.navigate("Home");
-    } else if (
-      this.state.title &&
-      this.state.amount &&
-      this.state.selectedSplit !== "EQUALLY"
-    ) {
-      const paidBy = members[this.state.selectedPerson];
-      const transaction = {
-        title: this.state.title,
-        amount: this.state.amount,
-        members: members,
-        share: this.state.share,
-        paidBy: paidBy
-      };
-      console.log(transaction);
-      Toast.show({
-        text: "Expense saved!",
-        // buttonText: "Okay",
-        duration: 3000
-      });
-      this.props.navigation.navigate("Home");
+      const { navigation } = this.props;
+      console.log("going back", this.props);
+
+      navigation.goBack();
+      navigation.state.params.update();
     } else {
       Alert.alert("Please fill out all the fields!");
     }
-  };
-
-  splitAmount = text => {
-    const splitShare = parseFloat(text, 10) / 2;
-    this.setState({ amount: text, splitShare: splitShare });
-  };
-
-  split = text => {
-    this.setState({ split: text });
   };
 
   submitHandler = () => {
@@ -280,166 +228,44 @@ class AddFriend extends Component {
 
   render() {
     return (
-      <Container style={styles.container}>
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("Drawer")}
-            >
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Add expense</Title>
-          </Body>
-          <Right>
-            <TouchableOpacity onPress={this.sendData}>
-              <Text style={styles.save}>SAVE</Text>
-            </TouchableOpacity>
-          </Right>
-        </Header>
+      <MenuProvider>
+        <Container style={styles.container}>
+          <Header>
+            <Left>
+              <Button
+                transparent
+                onPress={() => this.props.navigation.navigate("Drawer")}
+              >
+                <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>Add Friend</Title>
+            </Body>
+            <Right>
+              <TouchableOpacity onPress={this.sendData}>
+                <Text style={styles.save}>Add</Text>
+              </TouchableOpacity>
+            </Right>
+          </Header>
 
-        <Content padder>
-          <Card style={styles.topCard}>
-            <Form searchBar>
-              <Item last style={styles.flexWrap}>
-                <Text>With you and:</Text>
-                {this.state.members.map((member, idx) => {
-                  if (idx !== 0) {
-                    const name = member.slice(0, member.indexOf("@"));
-                    return (
-                      <View key={idx} style={styles.memberInput}>
-                        <Text>
-                          {" "}{name}{" "}
-                        </Text>
-                      </View>
-                    );
-                  }
-                })}
-                <Input
-                  id="email"
-                  value={this.state.email}
-                  onChangeText={text => this.setState({ email: text })}
-                  onSubmitEditing={this.submitHandler}
-                  onKeyPress={({ nativeEvent }) => {
-                    if (
-                      nativeEvent.keyCode === "Backspace" ||
-                      nativeEvent.keyCode === 8 ||
-                      nativeEvent.key === 8
-                    ) {
-                      this.popMember;
-                    }
-                  }}
-                />
-                <Picker
-                  note
-                  mode="dropdown"
-                  style={{ width: 20 }}
-                  selectedValue={this.state.selectedFriend}
-                  onValueChange={this.onFriendChange.bind(this)}
-                >
-                  <Picker.Item label={""} value={"0"} />
-                  {friends.map((friend, idx) => {
-                    return <Picker.Item label={friend} value={friend} />;
-                  })}
-                </Picker>
-              </Item>
-            </Form>
-          </Card>
-          <Form>
-            <Item underline>
-              <Input
-                id="title"
-                placeholder="Enter a description"
-                value={this.state.title}
-                onChangeText={text => this.setState({ title: text })}
-              />
-            </Item>
-            <Item inlineLabel>
-              <Label style={styles.currency}>
-                {"\u20B9"}
-              </Label>
-              <Input
-                id="amount"
-                placeholder="0.00"
-                value={this.state.amount}
-                onChangeText={text => this.splitAmount(text)}
-                keyboardType={"numeric"}
-              />
-            </Item>
-          </Form>
-          <View style={styles.selector}>
-            <Text>Paid by </Text>
-            <Button small light style={styles.selectorBtn}>
-              <Form>
-                <Picker
-                  note
-                  mode="dropdown"
-                  style={{ width: 120 }}
-                  selectedValue={this.state.selectedPerson}
-                  onValueChange={this.onValueChange.bind(this)}
-                >
-                  {this.state.members.map((member, idx) => {
-                    return <Picker.Item label={member} value={idx} />;
-                  })}
-                </Picker>
-              </Form>
-            </Button>
-            <Text style={styles.disabledBtn}> Split </Text>
-            <Button small light style={styles.selectorBtn}>
-              <Form>
-                <Picker
-                  note
-                  mode="dropdown"
-                  style={{ width: 100 }}
-                  selectedValue={this.state.selectedSplit}
-                  onValueChange={this.onSplitValueChange.bind(this)}
-                >
-                  <Picker.Item key={0} label="EQUALLY" value="EQUALLY" />
-                  <Picker.Item
-                    key={1}
-                    label="Split By Share"
-                    value="Split By Share"
-                  />
-                </Picker>
-              </Form>
-            </Button>
-          </View>
-          {this.state.modalVisible &&
+          <Content padder>
             <Card>
-              <Form>
-                {this.state.members.map((member, idx) => {
-                  return (
-                    <Item style={styles.splitForm} key={idx}>
-                      <Text>
-                        {member}
-                      </Text>
-                      <Right>
-                        <Input
-                          id={idx}
-                          placeholder={"0.00"}
-                          keyboardType={"numeric"}
-                          onChangeText={value => this.handleShares(idx, value)}
-                        />
-                      </Right>
-                    </Item>
-                  );
-                })}
-                <Right>
-                  <Button
-                    style={styles.done}
-                    small
-                    light
-                    onPress={this.handleShareSubmit}
-                  >
-                    <Text>Done</Text>
-                  </Button>
-                </Right>
+              <Form searchBar>
+                <Item last>
+                  <Text>Your Friend Email </Text>
+                  <Input
+                    id="email"
+                    placeholder="Enter email"
+                    value={this.state.email}
+                    onChangeText={text => this.setState({ email: text })}
+                  />
+                </Item>
               </Form>
-            </Card>}
-        </Content>
-      </Container>
+            </Card>
+          </Content>
+        </Container>
+      </MenuProvider>
     );
   }
 }

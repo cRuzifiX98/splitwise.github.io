@@ -12,7 +12,9 @@ import SideBar from "./screens/sidebar";
 import LoadingScreen from "./screens/Login";
 import LoginScreen from "./screens/LoginScreen";
 import { firebaseConfig } from "./screens/firebase";
+import AddExpense from "./screens/AddExpense";
 import AddFriend from "./screens/AddFriend";
+import Transaction from "./screens/Transaction";
 firebase.initializeApp(firebaseConfig);
 
 const Drawer = createDrawerNavigator(
@@ -35,13 +37,13 @@ const AppNavigator = createStackNavigator(
     Login: { screen: LoadingScreen },
     LoginScreen: { screen: LoginScreen },
     Drawer: { screen: Drawer },
-    // Home: { screen: Home },
-    AddFriend: { screen: AddFriend }
+    AddExpense: { screen: AddExpense },
+    AddFriend:{screen:AddFriend},
+    Transaction:{screen:Transaction}
   },
   {
     initialRouteName: "Login",
     headerMode: "none"
-    // contentComponent: props => <AddFriend {...props} />
   }
 );
 
