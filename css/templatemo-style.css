@@ -193,8 +193,17 @@ p {
   padding: 10rem;
 }
 
+.customBtn {
+  width: 10em;
+  height: 3em;
+  margin-left: 14em;
+  background-color: #5ac5a7;
+  color: white;
+  font-size: 1em
+}
+
 .color-team {
-  color: #5ac5a7;
+  color: #245043;
   padding-bottom: 2em;
 }
 
