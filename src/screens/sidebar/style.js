@@ -5,6 +5,23 @@ const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
 
 export default {
+  Container: {
+    padding: 0
+  },
+  primaryBackGround: {
+    backgroundColor: "#5AC5A7"
+  },
+  Card: {
+    backgroundColor: "#5AC5A7",
+    padding: 0,
+    borderColor: "#fff"
+  },
+  sidebarInfo: {
+    displa: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    backgroundColor: "#5AC5A7"
+  },
   drawerCover: {
     alignSelf: "stretch",
     height: deviceHeight / 3.5,

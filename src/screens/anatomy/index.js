@@ -26,7 +26,7 @@ class Anatomy extends Component {
               transparent
               onPress={() => this.props.navigation.openDrawer()}
             >
-              <Icon name="ios-menu" />
+              <Icon name="arrow-back  " />
             </Button>
           </Left>
           <Body>

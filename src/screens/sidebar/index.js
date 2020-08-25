@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Image } from "react-native";
+import firebase from "firebase";
 import {
   Content,
   Text,
@@ -10,9 +11,14 @@ import {
   Left,
   Right,
   Badge,
-  Button
+  Card,
+  CardItem,
+  Thumbnail
 } from "native-base";
 import styles from "./style";
+
+const name = "Souma Ghosh";
+const email = "sghosh.souma@gmail.com";
 
 const drawerCover = require("../../../assets/drawer-cover.png");
 const drawerImage = require("../../../assets/logo-kitchen-sink.png");
@@ -31,14 +37,8 @@ const datas = [
   },
   {
     name: "Setting",
-    route: "Anatomy",
+    route: "Anatomy1",
     icon: "settings",
-    bg: "#C5F442"
-  },
-  {
-    name: "Logout",
-    route: "Anatomy",
-    icon: "disc",
     bg: "#C5F442"
   }
 ];
@@ -54,14 +54,29 @@ class SideBar extends Component {
 
   render() {
     return (
-      <Container>
+      <Container style={styles.Container}>
         <Content
           bounces={false}
-          style={{ flex: 1, backgroundColor: "#fff", top: -1 }}
+          style={{ flex: 1, backgroundColor: "#fff", top: -1, margin: 0 }}
         >
-          <Image source={drawerCover} style={styles.drawerCover} />
-          <Image square style={styles.drawerImage} source={drawerImage} />
-
+          {/* <Image source={drawerCover} style={styles.drawerCover} />
+          <Image square style={styles.drawerImage} source={drawerImage} /> */}
+          <Card style={styles.Card}>
+            <CardItem style={styles.sidebarInfo}>
+              <Thumbnail
+                style={styles.thumbnailPrimary}
+                source={{
+                  uri: "https://api.adorable.io/avatars/100/ghosh"
+                }}
+              />
+              <Text>
+                {name}
+              </Text>
+              <Text>
+                {email}
+              </Text>
+            </CardItem>
+          </Card>
           <List
             dataArray={datas}
             renderRow={data =>
@@ -97,7 +112,16 @@ class SideBar extends Component {
                   </Right>}
               </ListItem>}
           />
-          {/* <Button dark><Text> Logout </Text></Button> */}
+          <ListItem button noBorder onPress={() => firebase.auth().signOut()}>
+            <Left>
+              <Icon
+                active
+                name="disc"
+                style={{ color: "#777", fontSize: 26, width: 30 }}
+              />
+              <Text style={styles.text}>Logout</Text>
+            </Left>
+          </ListItem>
         </Content>
       </Container>
     );

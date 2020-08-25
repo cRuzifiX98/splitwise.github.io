@@ -2,10 +2,10 @@
   "expo": {
     "sdkVersion": "32.0.0",
     "icon": "./assets/nblogo.png",
-    "slug": "nativebasekitchensink",
+    "slug": "splitwise-betageeks",
     "loading": {
       "hideExponentText": true,
-      "backgroundImage": "./assets/splashscreen.png"
+      "backgroundImage": "./assets/contacts/lanuchscreen-split.png"
     },
     "orientation": "portrait",
     "primaryColor": "#cccccc",
@@ -19,7 +19,7 @@
       "barStyle": "light-content",
       "backgroundColor": "#334393"
     },
-    "name": "NativebaseKitchenSink",
+    "name": "splitwise-betageeks",
     "version": "2.5.0",
     "platforms": [
       "android",

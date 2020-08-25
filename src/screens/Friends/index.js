@@ -1,34 +1,34 @@
-// import * as WebBrowser from "expo-web-browser";
-import React from "react";
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  Button,
-  TouchableOpacity,
-  View,
-  Alert
-} from "react-native";
+import React, { Component } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import TopCard from "./TopCard";
 import Friends from "./Friends";
-// import { MonoText } from "../components/StyledText";
-// import { H1, Container, , Icon } from "native-base";
-
-export default function HomeScreen() {
-  return (
-    <React.Fragment>
-      <ScrollView style={styles.container}>
-        <TopCard />
-        <Friends />
-      </ScrollView>
-      {/* <Button style={[styles.backGroundOrange, styles.addExpensesBtn]}>
-        <Text style={styles.plus}>+</Text>
-      </Button> */}
-    </React.Fragment>
-  );
+class HomeScreen extends Component {
+  render() {
+    return (
+      <React.Fragment>
+        <ScrollView style={styles.container}>
+          <TopCard />
+          <Friends
+            update={this.props.update}
+            data={this.props.data}
+            screenProps={this.props.screenProps}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          onPress={() =>
+            this.props.screenProps.navigation.navigate("AddExpense", {
+              update: this.props.update
+            })}
+          style={[styles.backGroundOrange, styles.addExpensesBtn]}
+        >
+          <Text style={styles.plus}>+</Text>
+        </TouchableOpacity>
+      </React.Fragment>
+    );
+  }
 }
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   addExpensesBtn: {
@@ -53,11 +53,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEEEEE"
   },
   primaryFont: {
-    fontSize: 14,
+    fontSize: 14
     // fontFamily: "encoded-sans-medium"
   },
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop: 0
   },
   backGroundOrange: {
     backgroundColor: "#FF692C"
